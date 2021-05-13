@@ -1,0 +1,15 @@
+.vscode/
+.vs/
+.idea/
+*.exe
+*.ilk
+*.pdb
+*.tlog
+*.obj
+*.idb
+
+build/
+bin/
+cmake-build-debug/
+
+images/UI/desktop\.ini
