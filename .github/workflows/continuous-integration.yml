@@ -8,7 +8,7 @@ on:
 
 jobs:
   CI:
-    name: Building Drakhtar Internationalization ({{ matrix.os }}, {{ matrix.configuration }})
+    name: Building Drakhtar Internationalization ({{ matrix.os }}, ${{ matrix.configuration }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -22,6 +22,7 @@ jobs:
           submodules: 'true'
 
       - name: Install Dependencies
+        if: "!contains(matrix.os, 'windows')"
         run: |
           sudo apt-get update
           sudo apt-get install cmake
@@ -30,13 +31,12 @@ jobs:
       - name: Build Project
         run: |
           cmake -B build -DINTERNATIONALIZATION_BUILD_TESTS=ON
-          cmake --build build --config {{ matrix.configuration }}
+          cmake --build build --config ${{ matrix.configuration }}
 
       - name: Run Tests
         run: |
-          pushd build
-          ctest --build-config {{ matrix.configuration }} --output-on-failure
-          popd
+          cd build
+          ctest --build-config ${{ matrix.configuration }} --output-on-failure
 
   Formatting:
     name: clang-format
