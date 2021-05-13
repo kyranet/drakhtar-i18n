@@ -9,7 +9,7 @@ on:
 jobs:
   CI:
     name: Building Drakhtar Internationalization ({{ matrix.os }}, {{ matrix.configuration }})
-    runs-on: {{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest]
