@@ -7,9 +7,13 @@ on:
   pull_request:
 
 jobs:
-  DrakhtarInternationalizationBuildUbuntu:
-    name: Building Drakhtar Internationalization (Ubuntu)
-    runs-on: ubuntu-latest
+  CI:
+    name: Building Drakhtar Internationalization ({{ matrix.os }}, {{ matrix.configuration }})
+    runs-on: {{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        configuration: [Debug, Release]
     if: "!contains(needs.pre_ci.outputs.commit_message, '[skip ci]')"
     steps:
       - name: Checkout Project
@@ -24,22 +28,15 @@ jobs:
 
       - uses: ammaraskar/gcc-problem-matcher@master
       - name: Build Project
-        run: make
+        run: |
+          cmake -B build -DINTERNATIONALIZATION_BUILD_TESTS=ON
+          cmake --build build --config {{ matrix.configuration }}
 
-  DrakhtarInternationalizationBuildWindows:
-    name: Building Drakhtar Internationalization (Windows)
-    runs-on: windows-latest
-    if: "!contains(needs.pre_ci.outputs.commit_message, '[skip ci]')"
-    steps:
-      - name: Checkout Project
-        uses: actions/checkout@v2
-        with:
-          submodules: 'true'
-
-      - uses: ammaraskar/msvc-problem-matcher@master
-      - name: Build Project
-        run: pwsh -File .\scripts\windows-build.ps1
-        shell: pwsh
+      - name: Run Tests
+        run: |
+          pushd build
+          ctest --build-config {{ matrix.configuration }} --output-on-failure
+          popd
 
   Formatting:
     name: clang-format
