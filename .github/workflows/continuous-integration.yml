@@ -7,15 +7,17 @@ on:
   pull_request:
 
 jobs:
-  DrakhtarInternationalizationBuildUbuntu:
-    name: Building Drakhtar Internationalization (Ubuntu)
-    runs-on: ubuntu-latest
+  CI_Ubuntu:
+    name: Building Drakhtar Internationalization (${{ matrix.os }}, ${{ matrix.configuration }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        configuration: [Debug, Release]
     if: "!contains(needs.pre_ci.outputs.commit_message, '[skip ci]')"
     steps:
       - name: Checkout Project
         uses: actions/checkout@v2
-        with:
-          submodules: 'true'
 
       - name: Install Dependencies
         run: |
@@ -24,22 +26,32 @@ jobs:
 
       - uses: ammaraskar/gcc-problem-matcher@master
       - name: Build Project
-        run: make
+        run: |
+          cmake -B build
+          cmake --build build --config ${{ matrix.configuration }}
 
-  DrakhtarInternationalizationBuildWindows:
-    name: Building Drakhtar Internationalization (Windows)
-    runs-on: windows-latest
+  CI_Windows:
+    name: Building Drakhtar Internationalization (${{ matrix.os }}, ${{ matrix.configuration }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+        configuration: [Debug, Release]
     if: "!contains(needs.pre_ci.outputs.commit_message, '[skip ci]')"
     steps:
       - name: Checkout Project
         uses: actions/checkout@v2
-        with:
-          submodules: 'true'
 
-      - uses: ammaraskar/msvc-problem-matcher@master
+      - uses: ammaraskar/gcc-problem-matcher@master
       - name: Build Project
-        run: pwsh -File .\scripts\windows-build.ps1
-        shell: pwsh
+        run: |
+          cmake -B build -DINTERNATIONALIZATION_BUILD_TESTS=ON
+          cmake --build build --config ${{ matrix.configuration }}
+
+      - name: Run Tests
+        run: |
+          cd build
+          ctest --build-config ${{ matrix.configuration }} --output-on-failure
 
   Formatting:
     name: clang-format
