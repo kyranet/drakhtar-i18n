@@ -2,4 +2,6 @@
 
 #pragma once
 
-class Number {};
+#include "Format/Numbers/INumber.h"
+
+class Latin : public INumber {};

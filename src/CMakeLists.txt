@@ -1,5 +1,5 @@
 set(INTERNATIONALIZATION_SOURCES
-	Format/Number.cpp)
+	Format/Numbers/INumber.cpp)
 
 add_library(internationalization SHARED ${INTERNATIONALIZATION_SOURCES})
 target_compile_features(internationalization PUBLIC cxx_std_17)
