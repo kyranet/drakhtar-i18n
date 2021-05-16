@@ -46,4 +46,4 @@ Locale parseLocale(const std::string& locale) noexcept;
  * Gets the user's preferred locale.
  */
 Locale getLocale() noexcept;
-};  // namespace Util
+}  // namespace Util

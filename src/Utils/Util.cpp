@@ -84,4 +84,4 @@ Locale getLocale() noexcept {
 
   return parseLocale(locale);
 }
-};  // namespace Util
+}  // namespace Util
