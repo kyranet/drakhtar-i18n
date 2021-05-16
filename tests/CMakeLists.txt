@@ -2,6 +2,7 @@ include(GoogleTest)
 
 set(SOURCES
   Format/Numbers/Systems/Latin.cpp
+  Utils/Util.cpp
   main.cpp)
 
 add_executable(internationalization_tests ${SOURCES})
