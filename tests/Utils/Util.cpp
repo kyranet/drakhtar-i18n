@@ -75,13 +75,6 @@ TEST(UtilsUtil, parseLocale_es_dash_ES_UTF_dash_8) {
   EXPECT_EQ(locale.country, "ES");
 }
 
-TEST(UtilsUtil, parseLocale_en_US_ISO8859_dash_1) {
-  const auto locale = Util::parseLocale("en_US.ISO8859-1");
-  EXPECT_EQ(locale.name, "en_US.ISO8859-1");
-  EXPECT_EQ(locale.language, "en");
-  EXPECT_EQ(locale.country, "US");
-}
-
 TEST(UtilsUtil, getLocale) {
   const auto locale = Util::getLocale();
   EXPECT_GT(locale.name.length(), 0);
