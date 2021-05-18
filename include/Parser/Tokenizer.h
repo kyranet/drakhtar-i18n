@@ -2,21 +2,11 @@
 
 #pragma once
 
+#include <cassert>
 #include <istream>
 
 class Tokenizer {
   std::istream& stream_;
-
- protected:
-  [[nodiscard]] inline char next() noexcept {
-    if (finished()) return '\0';
-
-    char out;
-    stream_ >> out;
-    return out;
-  }
-
-  [[nodiscard]] inline bool finished() noexcept { return stream_.eof(); }
 
  public:
   Tokenizer(std::istream& stream) : stream_(stream) {}
@@ -24,4 +14,16 @@ class Tokenizer {
   Tokenizer(Tokenizer&& tokenizer) : stream_(tokenizer.stream_) {}
   Tokenizer(const Tokenizer& tokenizer) : stream_(tokenizer.stream_) {}
   Tokenizer(const Tokenizer&& tokenizer) : stream_(tokenizer.stream_) {}
+
+  [[nodiscard]] inline char next() noexcept {
+    assert(!finished());
+
+    char out;
+    stream_.get(out);
+    return out;
+  }
+
+  inline void undo() noexcept { stream_.unget(); }
+
+  [[nodiscard]] inline bool finished() const noexcept { return stream_.eof(); }
 };

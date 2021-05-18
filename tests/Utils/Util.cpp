@@ -2,6 +2,67 @@
 
 #include <gtest/gtest.h>
 
+TEST(UtilsUtil, isNumber) {
+  EXPECT_TRUE(Util::isNumber('0'));
+  EXPECT_TRUE(Util::isNumber('1'));
+  EXPECT_TRUE(Util::isNumber('4'));
+  EXPECT_TRUE(Util::isNumber('9'));
+  EXPECT_FALSE(Util::isNumber('a'));
+  EXPECT_FALSE(Util::isNumber('_'));
+  EXPECT_FALSE(Util::isNumber('$'));
+}
+
+TEST(UtilsUtil, getNumber) {
+  EXPECT_EQ(Util::getNumber('0'), 0);
+  EXPECT_EQ(Util::getNumber('1'), 1);
+  EXPECT_EQ(Util::getNumber('4'), 4);
+  EXPECT_EQ(Util::getNumber('9'), 9);
+}
+
+TEST(UtilsUtil, isOctal) {
+  EXPECT_TRUE(Util::isOctal('0'));
+  EXPECT_TRUE(Util::isOctal('1'));
+  EXPECT_TRUE(Util::isOctal('7'));
+  EXPECT_FALSE(Util::isOctal('8'));
+  EXPECT_FALSE(Util::isOctal('a'));
+  EXPECT_FALSE(Util::isOctal('_'));
+  EXPECT_FALSE(Util::isOctal('$'));
+}
+
+TEST(UtilsUtil, getOctal) {
+  EXPECT_EQ(Util::getOctal('0'), 0);
+  EXPECT_EQ(Util::getOctal('1'), 1);
+  EXPECT_EQ(Util::getOctal('4'), 4);
+  EXPECT_EQ(Util::getOctal('7'), 7);
+}
+
+TEST(UtilsUtil, isHexadecimal) {
+  EXPECT_TRUE(Util::isHexadecimal('0'));
+  EXPECT_TRUE(Util::isHexadecimal('5'));
+  EXPECT_TRUE(Util::isHexadecimal('9'));
+  EXPECT_TRUE(Util::isHexadecimal('a'));
+  EXPECT_TRUE(Util::isHexadecimal('c'));
+  EXPECT_TRUE(Util::isHexadecimal('f'));
+  EXPECT_FALSE(Util::isHexadecimal('g'));
+  EXPECT_FALSE(Util::isHexadecimal('_'));
+  EXPECT_FALSE(Util::isHexadecimal('$'));
+}
+
+TEST(UtilsUtil, getHexadecimal) {
+  EXPECT_EQ(Util::getHexadecimal('0'), 0);
+  EXPECT_EQ(Util::getHexadecimal('5'), 5);
+  EXPECT_EQ(Util::getHexadecimal('9'), 9);
+  EXPECT_EQ(Util::getHexadecimal('a'), 10);
+  EXPECT_EQ(Util::getHexadecimal('c'), 12);
+  EXPECT_EQ(Util::getHexadecimal('f'), 15);
+}
+
+TEST(UtilsUtil, fromCodePoint) {
+  EXPECT_EQ(Util::fromCodePoint(0)[0], 0x00);
+  EXPECT_EQ(Util::fromCodePoint(0xFF), "\xFF");
+  EXPECT_EQ(Util::fromCodePoint(0xFFAE), "\xFF\xAE");
+}
+
 TEST(UtilsUtil, isLetter) {
   EXPECT_TRUE(Util::isLetter('a'));
   EXPECT_TRUE(Util::isLetter('k'));

@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <cassert>
 #include <string>
 
 namespace Util {
@@ -24,6 +25,64 @@ struct Locale {
    */
   std::string country;
 };
+
+/**
+ * Check whether or not a character si an ASCII decimal number.
+ */
+[[nodiscard]] inline bool isNumber(char c) noexcept {
+  return c >= '0' && c <= '9';
+}
+
+/**
+ * Gets the number from an ASCII decimal number character.
+ */
+[[nodiscard]] inline size_t getNumber(char c) noexcept {
+  assert(isNumber(c));
+  return c - '0';
+}
+
+/**
+ * Check whether or not a character is an ASCII octal number.
+ */
+[[nodiscard]] inline bool isOctal(char c) noexcept {
+  return c >= '0' && c <= '7';
+}
+
+/**
+ * Gets the number from an ASCII octal number character.
+ */
+[[nodiscard]] inline size_t getOctal(char c) noexcept {
+  assert(isOctal(c));
+  return c - '0';
+}
+
+/**
+ * Check whether or not a character is an ASCII hexadecimal number.
+ */
+[[nodiscard]] inline bool isHexadecimal(char c) noexcept {
+  return isNumber(c) || (c >= 'a' && c <= 'f') || (c >= 'F' && c <= 'F');
+}
+
+/**
+ * Check whether or not a character is an ASCII octal number.
+ */
+[[nodiscard]] inline size_t getHexadecimal(char c) noexcept {
+  assert(isHexadecimal(c));
+
+  // Start with the lowest character range in ASCII: '0'..'9' (48-57):
+  if (c <= '9') return c - '0';
+
+  // Continue with second character range in ASCII: 'A'..'Z' (65-90):
+  if (c <= 'Z') return (c - 'A') + 10;
+
+  // Finish with third character range in ASCII: 'a'..'z' (97-122):
+  return (c - 'a') + 10;
+}
+
+/**
+ * Generates a string from a code point.
+ */
+[[nodiscard]] std::string fromCodePoint(size_t code);
 
 /**
  * Check whether or not a character is an ASCII letter.

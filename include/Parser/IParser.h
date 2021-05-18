@@ -9,9 +9,7 @@ class IParser {
   Tokenizer tokenizer_;
 
  protected:
-  [[nodiscard]] inline const Tokenizer& tokenizer() const noexcept {
-    return tokenizer_;
-  }
+  [[nodiscard]] inline Tokenizer& tokenizer() noexcept { return tokenizer_; }
 
  public:
   IParser(std::istream& stream) : tokenizer_(stream) {}
