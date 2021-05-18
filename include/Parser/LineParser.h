@@ -2,6 +2,15 @@
 
 #pragma once
 
+#include <string>
+
 #include "Parser/IParser.h"
 
-class LineParser : public IParser {};
+class LineParser : public IParser {
+ public
+  std::string key;
+ public
+  std::string value;
+
+  LineParser(std::string line);
+};
