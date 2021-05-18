@@ -1,6 +1,8 @@
 set(INTERNATIONALIZATION_SOURCES
-	Format/Numbers/INumber.cpp
-	Utils/Util.cpp)
+	"Format/Numbers/INumber.cpp"
+	"Parser/Strings/StringContent.cpp"
+	"Parser/Strings/StringParser.cpp"
+	"Utils/Util.cpp")
 
 add_library(internationalization SHARED ${INTERNATIONALIZATION_SOURCES})
 target_compile_features(internationalization PUBLIC cxx_std_17)

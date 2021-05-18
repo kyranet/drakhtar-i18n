@@ -2,4 +2,17 @@
 
 #pragma once
 
-class IParser {};
+#include "Parser/Tokenizer.h"
+
+template <typename T>
+class IParser {
+  Tokenizer tokenizer_;
+
+ protected:
+  [[nodiscard]] inline Tokenizer& tokenizer() noexcept { return tokenizer_; }
+
+ public:
+  IParser(std::istream& stream) : tokenizer_(stream) {}
+
+  virtual T run() = 0;
+};

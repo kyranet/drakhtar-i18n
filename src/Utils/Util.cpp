@@ -20,6 +20,24 @@ namespace Util {
  */
 [[nodiscard]] inline bool isSemiColon(char c) noexcept { return c == ';'; }
 
+void fromCodePoint(size_t code, std::string& s) {
+  if (code <= 0xFF) {
+    s += static_cast<char>(code);
+  } else {
+    const auto trail = code & 0b1111'1111;
+    code >>= 8;
+
+    fromCodePoint(code, s);
+    fromCodePoint(trail, s);
+  }
+}
+
+[[nodiscard]] std::string fromCodePoint(size_t code) {
+  std::string s{};
+  fromCodePoint(code, s);
+  return s;
+}
+
 /**
  * Gets the user's preferred locale.
  */

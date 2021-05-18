@@ -1,9 +1,11 @@
 include(GoogleTest)
 
 set(SOURCES
-  Format/Numbers/Systems/Latin.cpp
-  Utils/Util.cpp
-  main.cpp)
+  "Format/Numbers/Systems/Latin.cpp"
+  "Parser/Strings/StringContent.cpp"
+  "Parser/Strings/StringParser.cpp"
+  "Utils/Util.cpp"
+  "main.cpp")
 
 add_executable(internationalization_tests ${SOURCES})
 target_link_libraries(internationalization_tests
