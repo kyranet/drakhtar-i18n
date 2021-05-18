@@ -12,5 +12,6 @@
 class FileParser : public IParser {
   std::map<std::string, std::string> map_;
 
+ public:
   FileParser(std::string file);
 };
