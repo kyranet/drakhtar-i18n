@@ -11,7 +11,7 @@ std::string StringContent::run(std::vector<std::string> variables) const {
 
   std::stringstream ss{};
   for (const auto& part : parts_) {
-    if (part.type == PartType::Content) {
+    if (part.isContent()) {
       ss << part.content();
     } else {
       assert(part.variable() < variables.size());

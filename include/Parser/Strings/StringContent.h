@@ -11,37 +11,37 @@ class StringContent final {
 
   struct ContentPart {
    private:
-    std::variant<std::string, size_t> value;
+    std::variant<size_t, std::string> value;
 
    public:
     PartType type;
 
     explicit ContentPart(size_t index)
-        : type(PartType::Variable), value(index) {}
+        : value(index), type(PartType::Variable) {}
     explicit ContentPart(const std::string& content)
-        : type(PartType::Content), value(content) {}
-
-    [[nodiscard]] inline bool isContent() const noexcept {
-      return type == PartType::Content;
-    };
-
-    [[nodiscard]] inline const std::string& content() const noexcept {
-      return std::get<0>(value);
-    }
-
-    [[nodiscard]] inline std::string& content() noexcept {
-      return std::get<0>(value);
-    }
+        : value(content), type(PartType::Content) {}
 
     [[nodiscard]] inline bool isVariable() const noexcept {
       return type == PartType::Variable;
     };
 
     [[nodiscard]] inline size_t variable() const noexcept {
-      return std::get<1>(value);
+      return std::get<0>(value);
     }
 
     [[nodiscard]] inline size_t& variable() noexcept {
+      return std::get<0>(value);
+    }
+
+    [[nodiscard]] inline bool isContent() const noexcept {
+      return type == PartType::Content;
+    };
+
+    [[nodiscard]] inline const std::string& content() const noexcept {
+      return std::get<1>(value);
+    }
+
+    [[nodiscard]] inline std::string& content() noexcept {
       return std::get<1>(value);
     }
   };
@@ -89,7 +89,7 @@ class StringContent final {
    * @remarks This function uses `assert` to check that the vector's size is big
    * enough for the variables.
    */
-  std::string run(std::vector<std::string> variables) const;
+  [[nodiscard]] std::string run(std::vector<std::string> variables) const;
 
   /**
    * Checks whether or not the content has variables.
