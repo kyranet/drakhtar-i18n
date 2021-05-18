@@ -5,8 +5,12 @@
 #include <vector>
 
 #include "Parser/IParser.h"
-#include "Parser/Strings/StringContent.h"
 #include "Parser/Tokenizer.h"
+
+class StringContent;
+struct VariableInfo;
+enum class Type;
+using variable_t;
 
 class StringParser : public IParser<StringContent> {
   std::string parseEscape();
@@ -17,6 +21,8 @@ class StringParser : public IParser<StringContent> {
 
   variable_t parseVariable();
   std::vector<std::string> parseModifiers();
+  VariableInfo parseVariable();
+  Type parseType(char c);
 
  public:
   StringParser(std::istream& stream) : IParser(stream) {}

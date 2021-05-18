@@ -7,6 +7,26 @@
 #include <variant>
 #include <vector>
 
+enum class Type {
+  String,
+  Boolean,
+  Int8,
+  Int16,
+  Int32,
+  Int64,
+  UInt8,
+  UInt16,
+  UInt32,
+  UInt64,
+  Float32,
+  Float64
+};
+
+struct VariableInfo {
+  size_t index;
+  Type type;
+};
+
 using variable_t = std::tuple<size_t, std::vector<std::string>>;
 
 class StringContent final {
@@ -52,6 +72,7 @@ class StringContent final {
     }
   };
 
+  std::vector<Type> types_{};
   std::vector<ContentPart> parts_{};
   bool dynamic_{false};
 
@@ -84,11 +105,21 @@ class StringContent final {
    * Adds a new variable part into the content.
    * @param index The index of the variable to read from when running.
    * @param mods The modifiers to be applied to the variable.
+   * @param type The type of the variable to read from when running.
    */
-  inline void add(variable_t var) {
-    add(ContentPart{var});
+  inline void add(variable_t var, Type type) {
+    add(ContentPart{ var });
+    if (index >= types_.size()) types_.resize(index);
+    types_[index] = type;
     dynamic_ = true;
   };
+
+  /**
+   * Adds a new variable part into the content.
+   * @param info info which contains both index and type of the variable to read
+   * from when running.
+   */
+  inline void add(VariableInfo info) { add(info.index, info.type); }
 
   /**
    * Processes the string with a set of variables.
@@ -112,4 +143,11 @@ class StringContent final {
    * Checks the size of the stored parts.
    */
   [[nodiscard]] inline size_t size() const noexcept { return parts_.size(); }
+
+  /**
+   * Get the argument types of the content.
+   */
+  [[nodiscard]] inline const std::vector<Type>& types() const noexcept {
+    return types_;
+  }
 };

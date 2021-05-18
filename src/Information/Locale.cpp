@@ -2,8 +2,10 @@
 
 #include "Information/Locale.h"
 
+#include "Parser/FileParser.h"
 #include <cassert>
 #include <stack>
+#include "Parser/Strings/StringContent.h"
 
 #include "Information/LocaleComponents.h"
 #include "LocaleManager.h"
@@ -40,8 +42,8 @@ void Locale::load(const std::filesystem::path& path,
       const auto key = prefix + pair.first;
       keys_.insert({key, pair.second});
     }
+    }
   }
-}
 
 void Locale::loadMetadata(const std::filesystem::path& path) {
   std::ifstream s{path / ".meta.txt"};
@@ -91,3 +93,57 @@ void Locale::load() {
   loadFallbacks();
   load(root, "");
 }
+
+std::string Locale::format(const std::string& arg...) {
+  va_list args;
+  va_start(args, arg);
+  auto& key = arg;
+
+  // TODO: Omar's part, get the real content using key.
+  StringContent content{};
+
+  std::vector<std::string> argsFormat{};
+
+  for (const auto type : content.types()) {
+    switch (type) {
+    case StringContent::Type::String:
+      argsFormat.push_back(va_arg(args, std::string));
+      break;
+    case StringContent::Type::Boolean:
+      argsFormat.push_back(display(va_arg(args, bool)));
+      break;
+    case StringContent::Type::Int8:
+      argsFormat.push_back(display(va_arg(args, int8_t)));
+      break;
+    case StringContent::Type::Int16:
+      argsFormat.push_back(display(va_arg(args, int16_t)));
+      break;
+    case StringContent::Type::Int32:
+      argsFormat.push_back(display(va_arg(args, int32_t)));
+      break;
+    case StringContent::Type::Int64:
+      argsFormat.push_back(display(va_arg(args, int64_t)));
+      break;
+    case StringContent::Type::UInt8:
+      argsFormat.push_back(display(va_arg(args, uint8_t)));
+      break;
+    case StringContent::Type::UInt16:
+      argsFormat.push_back(display(va_arg(args, uint16_t)));
+      break;
+    case StringContent::Type::UInt32:
+      argsFormat.push_back(display(va_arg(args, uint32_t)));
+      break;
+    case StringContent::Type::UInt64:
+      argsFormat.push_back(display(va_arg(args, uint32_t)));
+      break;
+    case StringContent::Type::Float32:
+      argsFormat.push_back(display(va_arg(args, float)));
+      break;
+    case StringContent::Type::Float64:
+      argsFormat.push_back(display(va_arg(args, double)));
+      break;
+    default:
+      // MALO, ESO NO SE HACE
+      break;
+
+      return content.run(argsFormat);

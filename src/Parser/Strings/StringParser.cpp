@@ -134,6 +134,7 @@ std::string StringParser::parseHexadecimal() { return parseHexadecimal(2); }
 std::string StringParser::parseUnicode() { return parseHexadecimal(4); }
 
 variable_t StringParser::parseVariable() {
+VariableInfo StringParser::parseVariable() {
   auto& t = tokenizer();
 
   bool defined{false};
@@ -143,6 +144,7 @@ variable_t StringParser::parseVariable() {
   char c;
   while (t.next(c)) {
     if (c == '}') {
+      if (defined) return {n, Type::String};
       if (defined) return variable_t{n, mods};
 
       throw std::runtime_error("Received empty variable place-holder.");
@@ -158,6 +160,12 @@ variable_t StringParser::parseVariable() {
     if (c == ':') {
       mods = parseModifiers();
       continue;
+    }
+
+    if (Util::isLetter(c)) {
+      if (!defined)
+        unexpectedCharacter(c, "an index before reading a type");
+      return {n, parseType(c)};
     }
 
     unexpectedCharacter(c, "a variable");
@@ -188,4 +196,90 @@ std::vector<std::string> StringParser::parseModifiers() {
     mod << c;
   }
   return mods;
+}
+
+Type StringParser::parseType(char c) {
+  auto& t = tokenizer();
+
+  bool defined{false};
+  size_t n{0};
+
+  switch (c) {
+    case 's':
+    case 'b':
+      defined = true;
+    case 'i':
+    case 'u':
+    case 'f':
+      break;
+    default:
+      unexpectedCharacter(c, "a type");
+  }
+
+  char type = c;
+
+  while (t.next(c)) {
+    if (c == '}') {
+      if (defined) break;
+      throw std::runtime_error("Cannot identify type: size not defined.");
+    }
+
+    if (Util::isNumber(c)) {
+      defined = true;
+      n *= 10;
+      n += Util::getNumber(c);
+      continue;
+    }
+
+    unexpectedCharacter(c, "a size");
+  }
+
+  if (c != '}') unexpectedEndOfInput();
+
+  switch (type) {
+    case 's':
+      return Type::String;
+    case 'b':
+      return Type::Boolean;
+    case 'i':
+      switch (n) {
+        case 8:
+          return Type::Int8;
+        case 16:
+          return Type::Int16;
+        case 32:
+          return Type::Int32;
+        case 64:
+          return Type::Int64;
+        default:
+          throw std::runtime_error(
+              "Cannot identify type: int size not supported.");
+      }
+    case 'u':
+      switch (n) {
+        case 8:
+          return Type::UInt8;
+        case 16:
+          return Type::UInt16;
+        case 32:
+          return Type::UInt32;
+        case 64:
+          return Type::UInt64;
+        default:
+          throw std::runtime_error(
+              "Cannot identify type: usigned size not supported.");
+      }
+    case 'f':
+      switch (n) {
+        case 32:
+          return Type::Float32;
+        case 64:
+          return Type::Float64;
+        default:
+          throw std::runtime_error(
+              "Cannot identify type: float size not supported.");
+      }
+    default:
+      unexpectedCharacter(type, "a numeric type");
+  }
 }

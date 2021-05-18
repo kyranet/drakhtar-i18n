@@ -18,6 +18,19 @@ class Locale {
   std::map<std::string, StringContent> keys_{};
   LocaleManager& manager_;
   INumber* numbers_{};
+  // TODO: IBool
+
+  [[nodiscard]] std::string display(bool arg);
+  [[nodiscard]] std::string display(int8_t arg);
+  [[nodiscard]] std::string display(int16_t arg);
+  [[nodiscard]] std::string display(int32_t arg);
+  [[nodiscard]] std::string display(int64_t arg);
+  [[nodiscard]] std::string display(uint8_t arg);
+  [[nodiscard]] std::string display(uint16_t arg);
+  [[nodiscard]] std::string display(uint32_t arg);
+  [[nodiscard]] std::string display(uint64_t arg);
+  [[nodiscard]] std::string display(float arg);
+  [[nodiscard]] std::string display(double arg);
 
   void load(const std::filesystem::path& path, const std::string& prefix);
   void loadMetadata(const std::filesystem::path& path);
@@ -63,4 +76,6 @@ class Locale {
 
   [[nodiscard]] const INumber* numbers() const noexcept { return numbers_; }
   INumber* numbers() noexcept { return numbers_; }
+
+  std::string format(const std::string& arg...);
 };
