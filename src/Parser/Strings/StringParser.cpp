@@ -8,7 +8,6 @@
 #include "Parser/Tokenizer.h"
 #include "Utils/Util.h"
 
-// TODO: Test this
 StringContent StringParser::run() {
   StringContent sc{};
   std::stringstream ss{};
@@ -26,9 +25,16 @@ StringContent StringParser::run() {
       }
 
       sc.add(parseVariable());
+    } else if (c == '"') {
+      break;
     } else {
       ss << c;
     }
+  }
+
+  // Add content if there was something in the string stream:
+  if (ss.rdbuf()->in_avail()) {
+    sc.add(ss.str());
   }
 
   return sc;
@@ -45,7 +51,8 @@ std::string StringParser::parseEscape() {
     case '?':
     case '\\':
     case '{':
-      return std::to_string(c);
+    case '}':
+      return std::string(1, c);
 
     case 'a':
       return "\a";
@@ -96,33 +103,11 @@ std::string StringParser::parseOctal(char first) {
   return Util::fromCodePoint(n);
 }
 
-// TODO: \xn is invalid, this requires at least 2 characters.
-std::string StringParser::parseHexadecimal() {
-  bool defined{false};
-
+std::string StringParser::parseHexadecimal(size_t size) {
   auto& t = tokenizer();
   size_t n{0};
 
-  while (!t.finished()) {
-    const auto c = t.next();
-    if (!Util::isHexadecimal(c)) {
-      t.undo();
-      break;
-    }
-
-    n *= 16;
-    n += Util::getHexadecimal(c);
-  }
-
-  if (defined) return Util::fromCodePoint(n);
-  throw std::runtime_error("Unexpected end of input.");
-}
-
-std::string StringParser::parseUnicode() {
-  auto& t = tokenizer();
-  size_t n{0};
-
-  for (int32_t i = 0; i < 4; ++i) {
+  for (size_t i = 0; i < size; ++i) {
     if (t.finished()) {
       throw std::runtime_error("Unexpected end of input.");
     }
@@ -130,7 +115,7 @@ std::string StringParser::parseUnicode() {
     const auto c = t.next();
     if (!Util::isHexadecimal(c)) {
       t.undo();
-      throw std::runtime_error("Invalid Unicode escape sequence.");
+      throw std::runtime_error("Invalid escape sequence.");
     }
 
     n *= 16;
@@ -139,6 +124,10 @@ std::string StringParser::parseUnicode() {
 
   return Util::fromCodePoint(n);
 }
+
+std::string StringParser::parseHexadecimal() { return parseHexadecimal(2); }
+
+std::string StringParser::parseUnicode() { return parseHexadecimal(4); }
 
 size_t StringParser::parseVariable() {
   auto& t = tokenizer();
@@ -157,6 +146,7 @@ size_t StringParser::parseVariable() {
       defined = true;
       n *= 10;
       n += Util::getNumber(c);
+      continue;
     }
 
     const auto message = "Unexpected character '" + std::to_string(c) + "'.";

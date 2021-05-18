@@ -11,9 +11,11 @@ class StringParser : public IParser<StringContent> {
   std::string parseEscape();
   std::string parseOctal(char first);
   std::string parseHexadecimal();
+  std::string parseHexadecimal(size_t size);
   std::string parseUnicode();
   size_t parseVariable();
 
  public:
+  StringParser(std::istream& stream) : IParser(stream) {}
   StringContent run() override;
 };

@@ -3,6 +3,7 @@ include(GoogleTest)
 set(SOURCES
   "Format/Numbers/Systems/Latin.cpp"
   "Parser/Strings/StringContent.cpp"
+  "Parser/Strings/StringParser.cpp"
   "Utils/Util.cpp"
   "main.cpp")
 
