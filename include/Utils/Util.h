@@ -97,6 +97,13 @@ struct Locale {
 [[nodiscard]] inline bool isNotLetter(char c) noexcept { return !isLetter(c); }
 
 /**
+ * Check whether or not a character is an ASCII letter or a number.
+ */
+[[nodiscard]] inline bool isValidIdentifierLetter(char c) noexcept {
+  return isLetter(c) || isNumber(c) || c == '_';
+}
+
+/**
  * Gets the user's preferred locale.
  */
 Locale parseLocale(const std::string& locale) noexcept;

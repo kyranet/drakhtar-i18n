@@ -13,6 +13,7 @@ class IParser {
 
  public:
   IParser(std::istream& stream) : tokenizer_(stream) {}
+  IParser(Tokenizer& t) : tokenizer_(t) {}
 
   virtual T run() = 0;
 };

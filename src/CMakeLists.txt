@@ -2,6 +2,9 @@ set(INTERNATIONALIZATION_SOURCES
 	"Format/Numbers/INumber.cpp"
 	"Parser/Strings/StringContent.cpp"
 	"Parser/Strings/StringParser.cpp"
+	"Parser/LineParser.cpp"
+	"Parser/FileParser.cpp"
+	"Parser/CommentParser.cpp"
 	"Utils/Util.cpp")
 
 add_library(internationalization SHARED ${INTERNATIONALIZATION_SOURCES})

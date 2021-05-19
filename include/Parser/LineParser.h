@@ -2,6 +2,19 @@
 
 #pragma once
 
-#include "Parser/IParser.h"
+#include <stdexcept>
+#include <string>
 
-class LineParser : public IParser {};
+#include "Parser/IParser.h"
+#include "Parser/Strings/StringContent.h"
+
+class LineParser : public IParser<std::pair<std::string, StringContent>> {
+ public:
+  std::string key;
+  StringContent value;
+
+  LineParser(Tokenizer t) : IParser(t){};
+  std::pair<std::string, StringContent> run() override;
+
+  StringContent parseValue();
+};
