@@ -43,11 +43,3 @@ StringContent LineParser::parseValue() {
   msg << "Unexpected character '" << c << "' while reading a value.";
   throw std::runtime_error(msg.str());
 }
-
-/*clave1="probando"
-clave2="dos+dos=5"
-clave3="Hello "{0}""
-#comentario 1
-clave4="{1} es el presonaje principal de {0}, \ny {2} es su lugarteniente"
-clave&="esto es un error" #comentario 2
-clave_5="esto son \"comillas dobles\" y esto \'comillas simples\'"*/

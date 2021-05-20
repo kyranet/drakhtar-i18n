@@ -14,6 +14,7 @@ class LineParser : public IParser<std::pair<std::string, StringContent>> {
   StringContent value;
 
   LineParser(Tokenizer t) : IParser(t){};
+  LineParser(std::istream& stream) : IParser(stream) {}
   std::pair<std::string, StringContent> run() override;
 
   StringContent parseValue();
