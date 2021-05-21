@@ -8,13 +8,10 @@
 #include "Parser/Strings/StringContent.h"
 
 class LineParser : public IParser<std::pair<std::string, StringContent>> {
- public:
-  std::string key;
-  StringContent value;
+  StringContent parseValue();
 
-  LineParser(Tokenizer t) : IParser(t){};
+ public:
+  LineParser(Tokenizer& t) : IParser(t){};
   LineParser(std::istream& stream) : IParser(stream) {}
   std::pair<std::string, StringContent> run() override;
-
-  StringContent parseValue();
 };

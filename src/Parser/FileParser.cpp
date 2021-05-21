@@ -5,22 +5,29 @@
 #include "Parser/CommentParser.h"
 #include "Parser/LineParser.h"
 #include "Parser/Tokenizer.h"
+#include "Utils/Util.h"
 
 std::map<std::string, StringContent> FileParser::run() {
   std::stringstream ss{};
   auto& t = tokenizer();
 
-  while (!t.finished()) {
+  while (true) {
     const auto c = t.next();
-    if (c == '#')
-      CommentParser(t).run();
-    else if (c == '\n')
+    if (t.finished()) break;
+
+    // If the character is a whitespace or a line break, continue:
+    if (Util::isWhiteSpace(c) || Util::isLineBreak(c)) {
       continue;
-    else {
+    }
+
+    // If the character is a comment, consume it:
+    if (c == '#') {
+      CommentParser(t).run();
+      if (t.finished()) break;
+    } else {
       t.undo();
-      auto entry = LineParser(t);
-      map_.insert(entry.run());
-      t.next();
+      map_.insert(LineParser(t).run());
+      if (t.finished()) break;
     }
   }
 

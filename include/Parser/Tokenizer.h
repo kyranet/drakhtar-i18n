@@ -26,4 +26,8 @@ class Tokenizer {
   inline void undo() noexcept { stream_.unget(); }
 
   [[nodiscard]] inline bool finished() const noexcept { return stream_.eof(); }
+
+  [[nodiscard]] inline std::streampos position() const noexcept {
+    return stream_.tellg();
+  }
 };

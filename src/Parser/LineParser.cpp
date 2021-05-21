@@ -7,39 +7,39 @@
 #include "Utils/Util.h"
 
 std::pair<std::string, StringContent> LineParser::run() {
-  std::stringstream ss{key};
+  std::stringstream ss{};
   auto& t = tokenizer();
 
-  while (!t.finished()) {
+  while (true) {
     const auto c = t.next();
+    if (t.finished()) break;
 
-    if (Util::isValidIdentifierLetter(c))
+    if (Util::isValidIdentifierLetter(c)) {
       ss << c;
-    else if (c == '#')
-      CommentParser(t).run();
-    else if (c == '=') {
-      key = ss.str();
-      value = parseValue();
+    } else if (c == '#') {
+      if (ss.rdbuf()->in_avail()) {
+        throw std::runtime_error("Unexpected comment after '" + ss.str() +
+                                 "'.");
+      }
 
-      return std::pair<std::string, StringContent>(key, value);
+      CommentParser(t).run();
+      if (t.finished()) break;
+    } else if (c == '=') {
+      return {ss.str(), parseValue()};
     } else {
-      std::ostringstream msg;
-      msg << "Unexpected character '" << c << "' while reading an identifier.";
-      throw std::runtime_error(msg.str());
+      unexpectedCharacter(c, "an identifier");
     }
   }
 
-  throw std::runtime_error("Unexpected end of input.");
+  unexpectedEndOfInput();
 }
 
 StringContent LineParser::parseValue() {
   auto& t = tokenizer();
-  if (t.finished()) throw std::runtime_error("Unexpected end of input.");
 
   const auto c = t.next();
+  if (t.finished()) unexpectedEndOfInput();
   if (c == '"') return StringParser(t).run();
 
-  std::ostringstream msg;
-  msg << "Unexpected character '" << c << "' while reading a value.";
-  throw std::runtime_error(msg.str());
+  unexpectedCharacter(c, "a value");
 }

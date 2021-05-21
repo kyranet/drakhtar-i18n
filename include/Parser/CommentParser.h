@@ -6,6 +6,6 @@
 
 class CommentParser : public IParser<void> {
  public:
-  CommentParser(Tokenizer t) : IParser(t){};
+  CommentParser(Tokenizer& t) : IParser(t){};
   void run() override;
 };

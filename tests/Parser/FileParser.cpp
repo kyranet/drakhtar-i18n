@@ -25,7 +25,7 @@ TEST(FileParser, run_commented_file) {
   EXPECT_EQ(v["key3"].run({}), "value3");
 }
 
-TEST(FileParser, run__file_with_variables) {
+TEST(FileParser, run_file_with_variables) {
   std::istringstream in{
       "key1=\"value1\"\nkey2=\"{0}\"\nkey3=\"value3\" # This is another "
       "comment"};
