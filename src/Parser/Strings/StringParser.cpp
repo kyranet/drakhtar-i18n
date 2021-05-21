@@ -13,11 +13,13 @@ StringContent StringParser::run() {
   std::stringstream ss{};
   auto& t = tokenizer();
 
-  while (!t.finished()) {
+  while (true) {
     const auto c = t.next();
+    if (t.finished()) break;
 
     if (c == '\\') {
       ss << parseEscape();
+      if (t.finished()) break;
     } else if (c == '{') {
       if (ss.rdbuf()->in_avail()) {
         sc.add(ss.str());
@@ -25,6 +27,7 @@ StringContent StringParser::run() {
       }
 
       sc.add(parseVariable());
+      if (t.finished()) break;
     } else if (c == '"') {
       break;
     } else {
@@ -42,10 +45,14 @@ StringContent StringParser::run() {
 
 std::string StringParser::parseEscape() {
   auto& t = tokenizer();
-  if (t.finished()) throw std::runtime_error("Unexpected end of input.");
 
   const auto c = t.next();
+  if (t.finished()) unexpectedEndOfInput();
+
   switch (c) {
+    case '\n':
+      return "";
+
     case '\'':
     case '"':
     case '?':
@@ -89,8 +96,10 @@ std::string StringParser::parseOctal(char first) {
   auto& t = tokenizer();
   size_t n{Util::getOctal(first)};
 
-  while (!t.finished()) {
+  while (true) {
     const auto c = t.next();
+    if (t.finished()) break;
+
     if (!Util::isOctal(c)) {
       t.undo();
       break;
@@ -108,11 +117,11 @@ std::string StringParser::parseHexadecimal(size_t size) {
   size_t n{0};
 
   for (size_t i = 0; i < size; ++i) {
+    const auto c = t.next();
     if (t.finished()) {
-      throw std::runtime_error("Unexpected end of input.");
+      unexpectedEndOfInput();
     }
 
-    const auto c = t.next();
     if (!Util::isHexadecimal(c)) {
       t.undo();
       throw std::runtime_error("Invalid escape sequence.");
@@ -134,8 +143,10 @@ size_t StringParser::parseVariable() {
 
   bool defined{false};
   size_t n{0};
-  while (!t.finished()) {
+
+  while (true) {
     const auto c = t.next();
+    if (t.finished()) break;
 
     if (c == '}') {
       if (defined) return n;
@@ -149,9 +160,8 @@ size_t StringParser::parseVariable() {
       continue;
     }
 
-    const auto message = "Unexpected character '" + std::to_string(c) + "'.";
-    throw std::runtime_error(message);
+    unexpectedCharacter(c, "a variable");
   }
 
-  throw std::runtime_error("Unexpected end of input.");
+  unexpectedEndOfInput();
 }

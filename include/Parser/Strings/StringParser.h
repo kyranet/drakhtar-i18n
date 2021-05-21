@@ -17,5 +17,6 @@ class StringParser : public IParser<StringContent> {
 
  public:
   StringParser(std::istream& stream) : IParser(stream) {}
+  StringParser(Tokenizer t) : IParser(t) {}
   StringContent run() override;
 };

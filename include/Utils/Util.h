@@ -27,6 +27,21 @@ struct Locale {
 };
 
 /**
+ * Check whether or not a character is an ASCII line break.
+ */
+[[nodiscard]] inline bool isLineBreak(char c) noexcept {
+  // Line Feed (10), Line Tabulation (11), Form Feed (12), Carriage Return (13):
+  return c >= '\x0A' && c <= '\x0D';
+}
+
+/**
+ * Check whether or not a character is an ASCII whitespace.
+ */
+[[nodiscard]] inline bool isWhiteSpace(char c) noexcept {
+  return c == '\t' || c == ' ';
+}
+
+/**
  * Check whether or not a character si an ASCII decimal number.
  */
 [[nodiscard]] inline bool isNumber(char c) noexcept {
@@ -95,6 +110,13 @@ struct Locale {
  * Check whether or not a character is not an ASCII letter.
  */
 [[nodiscard]] inline bool isNotLetter(char c) noexcept { return !isLetter(c); }
+
+/**
+ * Check whether or not a character is an ASCII letter or a number.
+ */
+[[nodiscard]] inline bool isValidIdentifierLetter(char c) noexcept {
+  return isLetter(c) || isNumber(c) || c == '_';
+}
 
 /**
  * Gets the user's preferred locale.
