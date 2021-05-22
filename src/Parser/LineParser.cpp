@@ -10,10 +10,8 @@ std::pair<std::string, StringContent> LineParser::run() {
   std::stringstream ss{};
   auto& t = tokenizer();
 
-  while (true) {
-    const auto c = t.next();
-    if (t.finished()) break;
-
+  char c;
+  while (t.next(c)) {
     if (Util::isValidIdentifierLetter(c)) {
       ss << c;
     } else if (c == '#') {

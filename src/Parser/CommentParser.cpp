@@ -3,9 +3,8 @@
 void CommentParser::run() {
   auto& t = tokenizer();
 
-  while (true) {
-    const auto c = t.next();
-    if (t.finished()) break;
+  char c;
+  while (t.next(c)) {
     if (c == '\n') break;
   }
 }

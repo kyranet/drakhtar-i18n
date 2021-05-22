@@ -6,6 +6,7 @@ set(SOURCES
   "Parser/Strings/StringParser.cpp"
   "Parser/FileParser.cpp"
   "Parser/LineParser.cpp"
+  "Parser/Tokenizer.cpp"
   "Utils/Util.cpp"
   "main.cpp")
 

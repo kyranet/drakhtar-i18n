@@ -13,10 +13,8 @@ StringContent StringParser::run() {
   std::stringstream ss{};
   auto& t = tokenizer();
 
-  while (true) {
-    const auto c = t.next();
-    if (t.finished()) break;
-
+  char c;
+  while (t.next(c)) {
     if (c == '\\') {
       ss << parseEscape();
       if (t.finished()) break;
@@ -96,10 +94,8 @@ std::string StringParser::parseOctal(char first) {
   auto& t = tokenizer();
   size_t n{Util::getOctal(first)};
 
-  while (true) {
-    const auto c = t.next();
-    if (t.finished()) break;
-
+  char c;
+  while (t.next(c)) {
     if (!Util::isOctal(c)) {
       t.undo();
       break;
@@ -144,10 +140,8 @@ size_t StringParser::parseVariable() {
   bool defined{false};
   size_t n{0};
 
-  while (true) {
-    const auto c = t.next();
-    if (t.finished()) break;
-
+  char c;
+  while (t.next(c)) {
     if (c == '}') {
       if (defined) return n;
       throw std::runtime_error("Received empty variable place-holder.");
