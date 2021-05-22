@@ -15,7 +15,7 @@ TEST(Tokenizer, next) {
   // Test stream's behaviour where the eof bit isn't set until it reads an
   // out-of-bounds value:
   EXPECT_FALSE(t.finished());
-  EXPECT_NO_THROW(t.next());
+  EXPECT_NO_THROW((void)t.next());
   EXPECT_TRUE(t.finished());
 }
 
