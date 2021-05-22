@@ -23,6 +23,13 @@ class Tokenizer {
     return out;
   }
 
+  [[nodiscard]] inline char next(char& c) noexcept {
+    assert(!finished());
+
+    stream_.get(c);
+    return !finished();
+  }
+
   inline void undo() noexcept { stream_.unget(); }
 
   [[nodiscard]] inline bool finished() const noexcept { return stream_.eof(); }

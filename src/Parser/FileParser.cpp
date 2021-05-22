@@ -11,10 +11,8 @@ std::map<std::string, StringContent> FileParser::run() {
   std::stringstream ss{};
   auto& t = tokenizer();
 
-  while (true) {
-    const auto c = t.next();
-    if (t.finished()) break;
-
+  char c;
+  while (t.next(c)) {
     // If the character is a whitespace or a line break, continue:
     if (Util::isWhiteSpace(c) || Util::isLineBreak(c)) {
       continue;

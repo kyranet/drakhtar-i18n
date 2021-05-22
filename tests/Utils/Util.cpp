@@ -2,6 +2,26 @@
 
 #include <gtest/gtest.h>
 
+TEST(UtilsUtil, isLineBreak) {
+  EXPECT_TRUE(Util::isLineBreak('\n'));
+  EXPECT_TRUE(Util::isLineBreak('\v'));
+  EXPECT_TRUE(Util::isLineBreak('\f'));
+  EXPECT_TRUE(Util::isLineBreak('\r'));
+  EXPECT_FALSE(Util::isLineBreak('a'));
+  EXPECT_FALSE(Util::isLineBreak(' '));
+  EXPECT_FALSE(Util::isLineBreak('$'));
+}
+
+TEST(UtilsUtil, isWhiteSpace) {
+  EXPECT_TRUE(Util::isWhiteSpace(' '));
+  EXPECT_TRUE(Util::isWhiteSpace('\t'));
+  EXPECT_FALSE(Util::isWhiteSpace('\f'));
+  EXPECT_FALSE(Util::isWhiteSpace('\r'));
+  EXPECT_FALSE(Util::isWhiteSpace('a'));
+  EXPECT_FALSE(Util::isWhiteSpace('_'));
+  EXPECT_FALSE(Util::isWhiteSpace('$'));
+}
+
 TEST(UtilsUtil, isNumber) {
   EXPECT_TRUE(Util::isNumber('0'));
   EXPECT_TRUE(Util::isNumber('1'));

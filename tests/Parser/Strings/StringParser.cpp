@@ -66,3 +66,12 @@ TEST(StringParser, run_string_with_early_end) {
   EXPECT_EQ(v.size(), 1);
   EXPECT_EQ(v.run({}), "Hello!");
 }
+
+TEST(StringParser, run_string_with_escaped_new_line) {
+  std::istringstream in{"Hello!\\\n How are you?\""};
+  StringParser sp{in};
+
+  const auto v = sp.run();
+  EXPECT_EQ(v.size(), 1);
+  EXPECT_EQ(v.run({}), "Hello! How are you?");
+}
