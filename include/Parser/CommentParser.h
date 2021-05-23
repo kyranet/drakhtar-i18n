@@ -7,5 +7,6 @@
 class CommentParser : public IParser<void> {
  public:
   CommentParser(Tokenizer& t) : IParser(t){};
+  CommentParser(std::istream& stream) : IParser(stream) {}
   void run() override;
 };

@@ -9,6 +9,7 @@ TEST(LineParser, run_simple_key) {
   const auto v = lp.run();
   EXPECT_EQ(v.first, "key");
   EXPECT_EQ(v.second.run({}), "value");
+  EXPECT_EQ(in.tellg(), 11);
 }
 
 TEST(LineParser, run_complex_key) {
@@ -18,6 +19,7 @@ TEST(LineParser, run_complex_key) {
   const auto v = lp.run();
   EXPECT_EQ(v.first, "KeY_123_");
   EXPECT_EQ(v.second.run({}), "value");
+  EXPECT_EQ(in.tellg(), 16);
 }
 
 TEST(LineParser, run_invalid_key_special_characters) {

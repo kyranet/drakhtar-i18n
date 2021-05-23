@@ -11,6 +11,7 @@ TEST(StringParser, run_simple_string) {
   const auto v = sp.run();
   EXPECT_EQ(v.size(), 1);
   EXPECT_EQ(v.run({}), "Hello!");
+  EXPECT_EQ(in.tellg(), 7);
 }
 
 TEST(StringParser, run_string_with_variable) {
@@ -20,6 +21,7 @@ TEST(StringParser, run_string_with_variable) {
   const auto v = sp.run();
   EXPECT_EQ(v.size(), 3);
   EXPECT_EQ(v.run({"Drakhtar"}), "Hello Drakhtar!");
+  EXPECT_EQ(in.tellg(), 11);
 }
 
 TEST(StringParser, run_string_with_octal) {
@@ -29,6 +31,14 @@ TEST(StringParser, run_string_with_octal) {
   const auto v = sp.run();
   EXPECT_EQ(v.size(), 1);
   EXPECT_EQ(v.run({}), "Hello \20!");
+  EXPECT_EQ(in.tellg(), 11);
+}
+
+TEST(StringParser, run_string_with_invalid_octal) {
+  std::istringstream in{"Hello \\9!\""};
+  StringParser sp{in};
+
+  EXPECT_THROW((void)sp.run(), std::runtime_error);
 }
 
 TEST(StringParser, run_string_with_hexadecimal) {
@@ -38,6 +48,21 @@ TEST(StringParser, run_string_with_hexadecimal) {
   const auto v = sp.run();
   EXPECT_EQ(v.size(), 1);
   EXPECT_EQ(v.run({}), "Hello \x60!");
+  EXPECT_EQ(in.tellg(), 12);
+}
+
+TEST(StringParser, run_string_with_invalid_hexadecimal_invalid_range) {
+  std::istringstream in{"Hello \\xZ3!\""};
+  StringParser sp{in};
+
+  EXPECT_THROW((void)sp.run(), std::runtime_error);
+}
+
+TEST(StringParser, run_string_with_invalid_hexadecimal_too_short) {
+  std::istringstream in{"Hello \\x3\""};
+  StringParser sp{in};
+
+  EXPECT_THROW((void)sp.run(), std::runtime_error);
 }
 
 TEST(StringParser, run_string_with_escaped_braces) {
@@ -47,6 +72,7 @@ TEST(StringParser, run_string_with_escaped_braces) {
   const auto v = sp.run();
   EXPECT_EQ(v.size(), 1);
   EXPECT_EQ(v.run({}), "Hello {0}");
+  EXPECT_EQ(in.tellg(), 11);
 }
 
 TEST(StringParser, run_string_with_special_characters) {
@@ -56,6 +82,7 @@ TEST(StringParser, run_string_with_special_characters) {
   const auto v = sp.run();
   EXPECT_EQ(v.size(), 1);
   EXPECT_EQ(v.run({}), "Hello\nWorld");
+  EXPECT_EQ(in.tellg(), 13);
 }
 
 TEST(StringParser, run_string_with_early_end) {
@@ -65,6 +92,7 @@ TEST(StringParser, run_string_with_early_end) {
   const auto v = sp.run();
   EXPECT_EQ(v.size(), 1);
   EXPECT_EQ(v.run({}), "Hello!");
+  EXPECT_EQ(in.tellg(), 7);
 }
 
 TEST(StringParser, run_string_with_escaped_new_line) {
@@ -74,4 +102,5 @@ TEST(StringParser, run_string_with_escaped_new_line) {
   const auto v = sp.run();
   EXPECT_EQ(v.size(), 1);
   EXPECT_EQ(v.run({}), "Hello! How are you?");
+  EXPECT_EQ(in.tellg(), 22);
 }
