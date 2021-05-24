@@ -4,6 +4,7 @@ set(SOURCES
   "Format/Numbers/Systems/Latin.cpp"
   "Parser/Strings/StringContent.cpp"
   "Parser/Strings/StringParser.cpp"
+  "Parser/CommentParser.cpp"
   "Parser/FileParser.cpp"
   "Parser/LineParser.cpp"
   "Parser/Tokenizer.cpp"

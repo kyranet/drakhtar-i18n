@@ -11,6 +11,7 @@ TEST(FileParser, run_simple_file) {
   EXPECT_EQ(v["key1"].run({}), "value1");
   EXPECT_EQ(v["key2"].run({}), "value2");
   EXPECT_EQ(v["key3"].run({}), "value3");
+  EXPECT_EQ(in.tellg(), -1);
 }
 
 TEST(FileParser, run_commented_file) {
@@ -23,6 +24,7 @@ TEST(FileParser, run_commented_file) {
   EXPECT_EQ(v.size(), 2);
   EXPECT_EQ(v["key1"].run({}), "value1");
   EXPECT_EQ(v["key3"].run({}), "value3");
+  EXPECT_EQ(in.tellg(), -1);
 }
 
 TEST(FileParser, run_file_with_variables) {
@@ -35,4 +37,5 @@ TEST(FileParser, run_file_with_variables) {
   EXPECT_EQ(v.size(), 3);
   EXPECT_EQ(v["key1"].run({}), "value1");
   EXPECT_EQ(v["key3"].run({}), "value3");
+  EXPECT_EQ(in.tellg(), -1);
 }
