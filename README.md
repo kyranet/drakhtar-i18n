@@ -4,18 +4,20 @@ Internationalization Engine built for the [Drakhtar](https://github.com/kyranet/
 
 ---
 
+## Documentation
+
+For documentation on how to use the library, please check the `docs` folder.
+
 ## Build
 
-### Windows
-
-#### Automatic
+### Automatic
 
 Double click on the [`windows-setup.cmd`] and the [`windows-build.cmd`] files accordingly. That's all!
 
 > **Note**: You must download [Microsoft PowerShell](https://github.com/PowerShell/PowerShell) to run the scripts, the
 built-in Windows PowerShell does not work as it lacks of features needed for them to work.
 
-#### Manual
+### Manual
 
 First, run CMake:
 
