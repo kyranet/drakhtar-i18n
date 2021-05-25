@@ -1,21 +1,5 @@
 # Getting Started
 
-## Folder Structure
-
-```
-/languages
-  |- en-US
-    |- .meta.txt
-    |- your-file.txt
-  |- es-ES
-    |- .meta.txt
-    |- your-file.txt
-```
-
-The `.meta.txt` files are injected by the library into the output binaries, and
-contain the metadata information required for a correct format of the primitive
-types.
-
 ## File Structure
 
 The file structure is similar to that used in configuration systems across many
@@ -99,3 +83,30 @@ We would need to pass `Locale::format` both a `std::string` and an `int32_t`:
 locale.format("HELLO", "Drakhtar", 6100);
 // -> "Hello Drakhtar, I have been waiting you for 6,100 days!"
 ```
+
+## Folder Structure
+
+```
+/languages
+  |- en-US
+    |- .meta.txt
+    |- your-file.txt
+  |- es-ES
+    |- .meta.txt
+    |- your-file.txt
+```
+
+The `.meta.txt` files are injected by the library into the output binaries, and
+contain the metadata information required for a correct format of the primitive
+types.
+
+To load the language files, you use the `load` method from `LocaleManager`,
+which will then load all the files from a folder recursively if it exists,
+throwing an error otherwise:
+
+```cpp
+manager.load("en-US");
+```
+
+You can also unload any other loaded locale using the `unload` method, and
+access to a vector of loaded languages using the `loaded` method.
