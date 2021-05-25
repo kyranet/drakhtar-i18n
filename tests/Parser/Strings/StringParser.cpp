@@ -112,5 +112,5 @@ TEST(StringParser, run_string_with_string_variable) {
   const auto v = sp.run();
   EXPECT_EQ(v.size(), 3);
   EXPECT_EQ(v.run({"Drakhtar"}), "Hello Drakhtar!");
-  EXPECT_EQ(in.tellg(), 11);
+  EXPECT_EQ(in.tellg(), 12);
 }
