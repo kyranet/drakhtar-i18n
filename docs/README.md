@@ -110,3 +110,35 @@ manager.load("en-US");
 
 You can also unload any other loaded locale using the `unload` method, and
 access to a vector of loaded languages using the `loaded` method.
+
+Furthermore, you can also list all the available locales by using
+`LocaleManager::list`, which will return a map of the folder names and their
+full name, in the example above:
+
+```cpp
+manager.list();
+// Map(2) {
+//   "en-US" => "English (United States)",
+//   "es-ES" => "Español (España)"
+// }
+```
+
+Which is useful particularly for making a language selector in your project.
+
+At last, you can also auto-detect the user's preferred locale by using
+`LocaleManager::getPreferred`, which returns a `Locale` object with the raw name,
+the language name, and the country name.
+
+## Namespaces
+
+If you put files inside a folder, their names will be prefixed with the folder's
+name, so if you define a key named `foo` inside `languages/en-US/misc/text.txt`,
+the key would then be accessible at `misc/foo` and not with just `foo`.
+
+If a key was already defined in a namespace, the behavior is that the library
+will print a warning and override the existing key.
+
+## Continue Reading
+
+- [Fallbacks](./fallbacks.md)
+- [Assets](./assets.md)
