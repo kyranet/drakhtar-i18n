@@ -77,5 +77,5 @@ class Locale {
   [[nodiscard]] const INumber* numbers() const noexcept { return numbers_; }
   INumber* numbers() noexcept { return numbers_; }
 
-  std::string format(const std::string& arg...);
+  std::string format(const std::string* arg...);
 };

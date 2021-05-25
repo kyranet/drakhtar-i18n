@@ -106,44 +106,102 @@ std::string Locale::format(const std::string& arg...) {
 
   for (const auto type : content.types()) {
     switch (type) {
-    case StringContent::Type::String:
-      argsFormat.push_back(va_arg(args, std::string));
-      break;
-    case StringContent::Type::Boolean:
-      argsFormat.push_back(display(va_arg(args, bool)));
-      break;
-    case StringContent::Type::Int8:
-      argsFormat.push_back(display(va_arg(args, int8_t)));
-      break;
-    case StringContent::Type::Int16:
-      argsFormat.push_back(display(va_arg(args, int16_t)));
-      break;
-    case StringContent::Type::Int32:
-      argsFormat.push_back(display(va_arg(args, int32_t)));
-      break;
-    case StringContent::Type::Int64:
-      argsFormat.push_back(display(va_arg(args, int64_t)));
-      break;
-    case StringContent::Type::UInt8:
-      argsFormat.push_back(display(va_arg(args, uint8_t)));
-      break;
-    case StringContent::Type::UInt16:
-      argsFormat.push_back(display(va_arg(args, uint16_t)));
-      break;
-    case StringContent::Type::UInt32:
-      argsFormat.push_back(display(va_arg(args, uint32_t)));
-      break;
-    case StringContent::Type::UInt64:
-      argsFormat.push_back(display(va_arg(args, uint32_t)));
-      break;
-    case StringContent::Type::Float32:
-      argsFormat.push_back(display(va_arg(args, float)));
-      break;
-    case StringContent::Type::Float64:
-      argsFormat.push_back(display(va_arg(args, double)));
-      break;
-    default:
-      // MALO, ESO NO SE HACE
-      break;
+      case Type::String:
+        argsFormat.push_back(va_arg(args, std::string));
+        break;
+      case Type::Boolean:
+        argsFormat.push_back(display(va_arg(args, bool)));
+        break;
+      case Type::Int8:
+        argsFormat.push_back(display(va_arg(args, int8_t)));
+        break;
+      case Type::Int16:
+        argsFormat.push_back(display(va_arg(args, int16_t)));
+        break;
+      case Type::Int32:
+        argsFormat.push_back(display(va_arg(args, int32_t)));
+        break;
+      case Type::Int64:
+        argsFormat.push_back(display(va_arg(args, int64_t)));
+        break;
+      case Type::UInt8:
+        argsFormat.push_back(display(va_arg(args, uint8_t)));
+        break;
+      case Type::UInt16:
+        argsFormat.push_back(display(va_arg(args, uint16_t)));
+        break;
+      case Type::UInt32:
+        argsFormat.push_back(display(va_arg(args, uint32_t)));
+        break;
+      case Type::UInt64:
+        argsFormat.push_back(display(va_arg(args, uint32_t)));
+        break;
+      case Type::Float32:
+        argsFormat.push_back(display(va_arg(args, float)));
+        break;
+      case Type::Float64:
+        argsFormat.push_back(display(va_arg(args, double)));
+        break;
+      default:
+        // MALO, ESO NO SE HACE
+        break;
+    }
+  }
 
-      return content.run(argsFormat);
+  return content.run(argsFormat);
+}
+
+std::string Locale::display(bool arg) {
+  // TODO: Display de verdad.
+  return "";
+}
+
+std::string Locale::display(int8_t arg) {
+  // TODO: Display de verdad.
+  return "";
+}
+
+std::string Locale::display(int16_t arg) {
+  // TODO: Display de verdad.
+  return "";
+}
+
+std::string Locale::display(int32_t arg) {
+  // TODO: Display de verdad.
+  return "";
+}
+
+std::string Locale::display(int64_t arg) {
+  // TODO: Display de verdad.
+  return "";
+}
+
+std::string Locale::display(uint8_t arg) {
+  // TODO: Display de verdad.
+  return "";
+}
+
+std::string Locale::display(uint16_t arg) {
+  // TODO: Display de verdad.
+  return "";
+}
+
+std::string Locale::display(uint32_t arg) {
+  // TODO: Display de verdad.
+  return "";
+}
+
+std::string Locale::display(uint64_t arg) {
+  // TODO: Display de verdad.
+  return "";
+}
+
+std::string Locale::display(float arg) {
+  // TODO: Display de verdad.
+  return "";
+}
+
+std::string Locale::display(double arg) {
+  // TODO: Display de verdad.
+  return "";
+}

@@ -104,3 +104,13 @@ TEST(StringParser, run_string_with_escaped_new_line) {
   EXPECT_EQ(v.run({}), "Hello! How are you?");
   EXPECT_EQ(in.tellg(), 22);
 }
+
+TEST(StringParser, run_string_with_string_variable) {
+  std::istringstream in{"Hello {0s}!\""};
+  StringParser sp{in};
+
+  const auto v = sp.run();
+  EXPECT_EQ(v.size(), 3);
+  EXPECT_EQ(v.run({"Drakhtar"}), "Hello Drakhtar!");
+  EXPECT_EQ(in.tellg(), 11);
+}
