@@ -24,7 +24,7 @@ StringContent StringParser::run() {
         ss.str("");
       }
 
-      sc.add(parseVariable());
+      sc.add(parseVariable(), parseModifiers());
       if (t.finished()) break;
     } else if (c == '"') {
       break;
@@ -142,7 +142,7 @@ size_t StringParser::parseVariable() {
 
   char c;
   while (t.next(c)) {
-    if (c == '}') {
+    if (c == '}' || c == ':') {
       if (defined) return n;
       throw std::runtime_error("Received empty variable place-holder.");
     }
@@ -158,4 +158,33 @@ size_t StringParser::parseVariable() {
   }
 
   unexpectedEndOfInput();
+}
+
+std::vector<std::string> StringParser::parseModifiers() {
+  auto& t = tokenizer();
+  std::vector<std::string> mods = std::vector<std::string>();
+  std::string mod;
+  char c;
+
+  while (t.next(c)) {
+    if (c == '}') {
+      if (true) {
+        mods.push_back(mod);
+        break;
+      }
+      throw std::runtime_error("Invalid variable modifier.");
+    }
+
+    if (c == ':') {
+      if (true) {
+        mods.push_back(mod);
+        mod.clear();
+        continue;
+      }
+      throw std::runtime_error("Received empty variable place-holder.");
+    }
+
+    mod.push_back(c);
+  }
+  return mods;
 }
