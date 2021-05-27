@@ -12,5 +12,4 @@ TEST(UppercaseTransformer, run_variable_uppercase) {
   const auto v = sp.run();
   EXPECT_EQ(v.size(), 3);
   EXPECT_EQ(v.run({"Drakhtar"}), "Hello DRAKHTAR!");
-  EXPECT_EQ(in.tellg(), 11);
 }

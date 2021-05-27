@@ -158,6 +158,7 @@ std::tuple<size_t, std::vector<std::string>> StringParser::parseVariable() {
 
     if (c == ':') {
       mods = parseModifiers();
+      continue;
     }
 
     unexpectedCharacter(c, "a variable");

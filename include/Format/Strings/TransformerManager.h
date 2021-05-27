@@ -7,7 +7,6 @@
 #include <string>
 
 #include "ITransformer.h"
-#include "UppercaseTransformer.h"
 
 class TransformerManager {
   static TransformerManager* instance_;

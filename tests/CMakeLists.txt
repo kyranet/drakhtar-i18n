@@ -3,6 +3,7 @@ include(GoogleTest)
 set(SOURCES
   "Format/Strings/TransformerManager.cpp"
   "Format/Strings/UppercaseTransformer.cpp"
+  "Format/Strings/LowercaseTransformer.cpp"
   "Format/Numbers/Systems/Latin.cpp"
   "Parser/Strings/StringContent.cpp"
   "Parser/Strings/StringParser.cpp"
