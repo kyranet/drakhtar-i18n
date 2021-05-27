@@ -9,7 +9,13 @@
 void Locale::init(const std::string& locale) {
   locale_ = locale;
 
-  // TODO: Load .meta.txt file
+  std::filesystem::path root{"languages"};
+  std::ifstream s{root / locale / ".meta.txt"};
+  FileParser fp{s};
+  const auto map = fp.run();
+  name_ = map.at("NAME").run({});
+
+  // TODO(Pablo): Assign all other properties here
 }
 
 void Locale::load(const std::filesystem::path& path,
