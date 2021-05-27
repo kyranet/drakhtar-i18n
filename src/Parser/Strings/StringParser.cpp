@@ -163,8 +163,7 @@ VariableInfo StringParser::parseVariable() {
     }
 
     if (Util::isLetter(c)) {
-      if (!defined)
-        unexpectedCharacter(c, "an index before reading a type");
+      if (!defined) unexpectedCharacter(c, "an index before reading a type");
       return {n, parseType(c)};
     }
 
