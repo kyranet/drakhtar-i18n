@@ -24,7 +24,7 @@ StringContent StringParser::run() {
         ss.str("");
       }
 
-      sc.add(parseVariable(), parseModifiers());
+      sc.add(parseVariable());
       if (t.finished()) break;
     } else if (c == '"') {
       break;
@@ -134,16 +134,18 @@ std::string StringParser::parseHexadecimal() { return parseHexadecimal(2); }
 
 std::string StringParser::parseUnicode() { return parseHexadecimal(4); }
 
-size_t StringParser::parseVariable() {
+std::tuple<size_t, std::vector<std::string>> StringParser::parseVariable() {
   auto& t = tokenizer();
 
   bool defined{false};
   size_t n{0};
+  std::vector<std::string> mods;
 
   char c;
   while (t.next(c)) {
-    if (c == '}' || c == ':') {
-      if (defined) return n;
+    if (c == '}') {
+      if (defined) return std::make_tuple(n, mods);
+
       throw std::runtime_error("Received empty variable place-holder.");
     }
 
@@ -152,6 +154,10 @@ size_t StringParser::parseVariable() {
       n *= 10;
       n += Util::getNumber(c);
       continue;
+    }
+
+    if (c == ':') {
+      mods = parseModifiers();
     }
 
     unexpectedCharacter(c, "a variable");
@@ -168,20 +174,15 @@ std::vector<std::string> StringParser::parseModifiers() {
 
   while (t.next(c)) {
     if (c == '}') {
-      if (true) {
-        mods.push_back(mod);
-        break;
-      }
-      throw std::runtime_error("Invalid variable modifier.");
+      mods.push_back(mod);
+      t.undo();
+      return mods;
     }
 
     if (c == ':') {
-      if (true) {
-        mods.push_back(mod);
-        mod.clear();
-        continue;
-      }
-      throw std::runtime_error("Received empty variable place-holder.");
+      mods.push_back(mod);
+      mod.clear();
+      continue;
     }
 
     mod.push_back(c);

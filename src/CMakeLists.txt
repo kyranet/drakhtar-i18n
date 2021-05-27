@@ -1,5 +1,6 @@
 set(INTERNATIONALIZATION_SOURCES
 	"Format/Numbers/INumber.cpp"
+	"Format/Strings/TransformerManager.cpp"
 	"Parser/Strings/StringContent.cpp"
 	"Parser/Strings/StringParser.cpp"
 	"Parser/LineParser.cpp"

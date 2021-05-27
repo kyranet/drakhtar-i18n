@@ -15,7 +15,8 @@ class StringParser : public IParser<StringContent> {
   std::string parseHexadecimal();
   std::string parseHexadecimal(size_t size);
   std::string parseUnicode();
-  size_t parseVariable();
+
+  std::tuple<size_t, std::vector<std::string>> parseVariable();
   std::vector<std::string> parseModifiers();
 
  public:

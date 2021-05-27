@@ -17,8 +17,10 @@ class StringContent final {
     PartType type;
     std::vector<std::string> modifiers;
 
-    explicit ContentPart(size_t index, std::vector<std::string> mods)
-        : value(index), type(PartType::Variable), modifiers(mods) {}
+    explicit ContentPart(std::tuple<size_t, std::vector<std::string>> var)
+        : value(std::get<0>(var)),
+          type(PartType::Variable),
+          modifiers(std::get<1>(var)) {}
     explicit ContentPart(const std::string& content)
         : value(content), type(PartType::Content) {}
 
@@ -80,8 +82,8 @@ class StringContent final {
    * @param index The index of the variable to read from when running.
    * @param mods The modifiers to be applied to the variable.
    */
-  inline void add(size_t index, std::vector<std::string> mods) {
-    add(ContentPart{index, mods});
+  inline void add(std::tuple<size_t, std::vector<std::string>> var) {
+    add(ContentPart{var});
     dynamic_ = true;
   };
 

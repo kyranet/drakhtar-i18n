@@ -3,6 +3,7 @@
 #pragma once
 
 #include <map>
+#include <stdexcept>
 #include <string>
 
 #include "ITransformer.h"
@@ -15,22 +16,15 @@ class TransformerManager {
   TransformerManager() = default;
   ~TransformerManager() = default;
 
-  static void init() {
-    transformers.insert(std::pair<std::string, ITransformer*>(
-        "uppercase", new UppercaseTransformer()));
-  }
+  static void init();
 
  public:
-  static TransformerManager& getInstance() {
-    if (instance_ == nullptr) {
-      instance_ = new TransformerManager();
-      init();
-    }
-
-    return *instance_;
-  }
+  static TransformerManager& getInstance();
 
   std::string format(std::string string, std::string format) {
-    return transformers[format]->format(string);
+    const auto search = transformers.find(format);
+    if (search != transformers.cend()) return search->second->format(string);
+
+    throw std::runtime_error("Unexpected format '" + format + "'.");
   }
 };
