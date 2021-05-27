@@ -2,6 +2,7 @@ include(GoogleTest)
 
 set(SOURCES
   "Format/Numbers/Systems/Latin.cpp"
+  "Information/Locale.cpp"
   "Parser/Strings/StringContent.cpp"
   "Parser/Strings/StringParser.cpp"
   "Parser/CommentParser.cpp"
@@ -9,8 +10,8 @@ set(SOURCES
   "Parser/LineParser.cpp"
   "Parser/Tokenizer.cpp"
   "Utils/Util.cpp"
+  "LocaleManager.cpp"
   "main.cpp")
-
 
 add_executable(i18n_tests ${SOURCES})
 target_link_libraries(i18n_tests
@@ -32,4 +33,5 @@ add_custom_command(
     $<TARGET_FILE_DIR:i18n_tests>/languages
 )
 
-gtest_discover_tests(i18n_tests)
+gtest_discover_tests(i18n_tests
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:i18n_tests>)

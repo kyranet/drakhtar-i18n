@@ -5,14 +5,12 @@
 #include <cassert>
 #include <filesystem>
 
-#include "Utils/Util.h"
-
 void LocaleManager::init() {
-  load(true);
+  internalLoad(true);
   initialized_ = true;
 }
 
-int32_t LocaleManager::load(bool metadataOnly) {
+int32_t LocaleManager::internalLoad(bool metadataOnly) {
   assert(std::filesystem::exists("languages"));
   assert(std::filesystem::is_directory("languages"));
 
@@ -31,7 +29,7 @@ int32_t LocaleManager::load(bool metadataOnly) {
 
     // Load the directory:
     const auto locale = file.path().filename().string();
-    if (load(locale, metadataOnly)) {
+    if (internalLoad(locale, metadataOnly)) {
       ++loaded;
     }
   }
@@ -39,7 +37,7 @@ int32_t LocaleManager::load(bool metadataOnly) {
   return loaded;
 }
 
-bool LocaleManager::load(const std::string& locale, bool metadataOnly) {
+bool LocaleManager::internalLoad(const std::string& locale, bool metadataOnly) {
   std::filesystem::path path{"languages"};
 
   assert(std::filesystem::exists(path));
@@ -64,10 +62,8 @@ bool LocaleManager::load(const std::string& locale, bool metadataOnly) {
   return true;
 }
 
-int32_t LocaleManager::load() { return load(false); }
+int32_t LocaleManager::load() { return internalLoad(false); }
 
 bool LocaleManager::load(const std::string& locale) {
-  return load(locale, false);
+  return internalLoad(locale, false);
 }
-
-static Util::Locale getPreferred() noexcept { return Util::getLocale(); }
