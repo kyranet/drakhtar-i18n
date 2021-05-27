@@ -235,5 +235,139 @@ TEST(StringParser, run_string_with_truncated_variable) {
   std::istringstream in{"Hello {"};
   StringParser sp{in};
 
-  EXPECT_THROW((void)sp.run(), std::runtime_error);
+  // EXPECT_THROW((void)sp.run(), std::runtime_error);
+
+  try {
+    sp.run();
+  } catch (std::runtime_error& e) {
+    EXPECT_EQ(std::string(e.what()), std::string("Unexpected end of input."));
+  }
+}
+
+TEST(StringParser, run_string_with_empty_variable_placeholder) {
+  std::istringstream in{"Hello {}"};
+  StringParser sp{in};
+
+  // EXPECT_THROW((void)sp.run(), std::runtime_error);
+
+  try {
+    sp.run();
+  } catch (std::runtime_error& e) {
+    EXPECT_EQ(std::string(e.what()),
+              std::string("Received empty variable place-holder."));
+  }
+}
+
+TEST(StringParser, run_string_with_invalid_character) {
+  std::istringstream in{"Hello {/}"};
+  StringParser sp{in};
+
+  // EXPECT_THROW((void)sp.run(), std::runtime_error);
+
+  try {
+    sp.run();
+  } catch (std::runtime_error& e) {
+    EXPECT_EQ(
+        std::string(e.what()),
+        std::string("Unexpected character '/', a variable was expected."));
+  }
+}
+
+TEST(StringParser, run_string_with_indexless_variable_placeholder) {
+  std::istringstream in{"Hello {b}"};
+  StringParser sp{in};
+
+  // EXPECT_THROW((void)sp.run(), std::runtime_error);
+
+  try {
+    sp.run();
+  } catch (std::runtime_error& e) {
+    EXPECT_EQ(std::string(e.what()),
+              std::string("Unexpected character 'b', an index before reading a "
+                          "type was expected."));
+  }
+}
+
+TEST(StringParser, run_string_with_unknown_type_variable) {
+  std::istringstream in{"Hello {0q}"};
+  StringParser sp{in};
+
+  // EXPECT_THROW((void)sp.run(), std::runtime_error);
+
+  try {
+    sp.run();
+  } catch (std::runtime_error& e) {
+    EXPECT_EQ(std::string(e.what()),
+              std::string("Unexpected character 'q', a type was expected."));
+  }
+}
+
+TEST(StringParser, run_string_with_unknown_size_variable) {
+  std::istringstream in{"Hello {0i}"};
+  StringParser sp{in};
+
+  // EXPECT_THROW((void)sp.run(), std::runtime_error);
+
+  try {
+    sp.run();
+  } catch (std::runtime_error& e) {
+    EXPECT_EQ(std::string(e.what()),
+              std::string("Cannot identify type: size not defined."));
+  }
+}
+
+TEST(StringParser, run_string_with_invalid_character_after_type_recognition) {
+  std::istringstream in{"Hello {0iq}"};
+  StringParser sp{in};
+
+  // EXPECT_THROW((void)sp.run(), std::runtime_error);
+
+  try {
+    sp.run();
+  } catch (std::runtime_error& e) {
+    EXPECT_EQ(std::string(e.what()),
+              std::string("Unexpected character 'q', a size was expected."));
+  }
+}
+
+TEST(StringParser, run_string_with_unsupported_integer_size) {
+  std::istringstream in{"Hello {0i20}"};
+  StringParser sp{in};
+
+  // EXPECT_THROW((void)sp.run(), std::runtime_error);
+
+  try {
+    sp.run();
+  } catch (std::runtime_error& e) {
+    EXPECT_EQ(std::string(e.what()),
+              std::string("Cannot identify type: int size not supported."));
+  }
+}
+
+TEST(StringParser, run_string_with_unsupported_unsigned_size) {
+  std::istringstream in{"Hello {0u20}"};
+  StringParser sp{in};
+
+  // EXPECT_THROW((void)sp.run(), std::runtime_error);
+
+  try {
+    sp.run();
+  } catch (std::runtime_error& e) {
+    EXPECT_EQ(std::string(e.what()),
+              std::string("Cannot identify type: usigned size not supported."));
+  }
+}
+
+TEST(StringParser, run_string_with_unsupported_float_size) {
+  std::istringstream in{"Hello {0f20}"};
+  StringParser sp{in};
+
+  // EXPECT_THROW((void)sp.run(), std::runtime_error);
+
+  try {
+    sp.run();
+  } catch (std::runtime_error& e) {
+    EXPECT_EQ(std::string(e.what()),
+              std::string("Cannot identify type: float size not supported."));
+  }
 }
