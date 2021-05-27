@@ -10,6 +10,7 @@ set(I18N_SOURCES
 	"Parser/CommentParser.cpp"
 	"Utils/Util.cpp"
 	"Utils/NumberMetadata.cpp"
+	"Utils/Util.cpp"
 	"LocaleManager.cpp")
 
 add_library(i18n SHARED ${I18N_SOURCES})
