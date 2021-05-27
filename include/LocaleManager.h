@@ -11,7 +11,7 @@
 
 namespace Util {
 struct Locale;
-};
+}
 
 class LocaleManager final {
   bool initialized_{false};
