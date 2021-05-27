@@ -2,14 +2,15 @@
 
 #include "Information/Locale.h"
 
-#include "Parser/FileParser.h"
 #include <cassert>
 #include <stack>
 #include "Parser/Strings/StringContent.h"
+#include <cstdarg>
 
 #include "Information/LocaleComponents.h"
 #include "LocaleManager.h"
 #include "Parser/FileParser.h"
+#include "Parser/Strings/StringContent.h"
 
 void Locale::init(const std::string& locale) {
   locale_ = locale;
@@ -42,8 +43,8 @@ void Locale::load(const std::filesystem::path& path,
       const auto key = prefix + pair.first;
       keys_.insert({key, pair.second});
     }
-    }
   }
+}
 
 void Locale::loadMetadata(const std::filesystem::path& path) {
   std::ifstream s{path / ".meta.txt"};
@@ -94,7 +95,7 @@ void Locale::load() {
   load(root, "");
 }
 
-std::string Locale::format(const std::string& arg...) {
+std::string Locale::format(const std::string* arg...) {
   va_list args;
   va_start(args, arg);
   auto& key = arg;
