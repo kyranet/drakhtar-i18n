@@ -35,7 +35,7 @@ TEST(LocaleManager, load_locale) {
 
   EXPECT_TRUE(m.load("en-US"));
 
-  EXPECT_FALSE(m.loaded("en"));
+  EXPECT_TRUE(m.loaded("en"));
   EXPECT_TRUE(m.loaded("en-US"));
   EXPECT_FALSE(m.loaded("es"));
   EXPECT_FALSE(m.loaded("es-ES"));

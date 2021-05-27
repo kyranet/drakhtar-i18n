@@ -1,6 +1,7 @@
 set(I18N_SOURCES
 	"Format/Numbers/INumber.cpp"
 	"Information/Locale.cpp"
+	"Information/LocaleComponents.cpp"
 	"Parser/Strings/StringContent.cpp"
 	"Parser/Strings/StringParser.cpp"
 	"Parser/LineParser.cpp"

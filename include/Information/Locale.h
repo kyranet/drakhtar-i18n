@@ -9,16 +9,24 @@
 #include "Parser/Strings/StringContent.h"
 
 class INumber;
+class LocaleManager;
+struct LocaleComponents;
 
 class Locale {
   std::string name_{};
   std::string locale_{};
   std::map<std::string, StringContent> keys_{};
+  LocaleManager& manager_;
   INumber* numbers_{};
 
   void load(const std::filesystem::path& path, const std::string& prefix);
+  void loadMetadata(const std::filesystem::path& path);
+  bool loadFallback(const std::string& name);
+  void loadFallbacks();
 
  public:
+  Locale(LocaleManager& manager) : manager_(manager) {}
+
   /**
    * Initializes the locale's metadata from the `.meta.txt` file located in the
    * locale's dedicated directory.
