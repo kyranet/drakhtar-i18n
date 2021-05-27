@@ -1,38 +1,40 @@
-set(INTERNATIONALIZATION_SOURCES
+set(I18N_SOURCES
 	"Format/Numbers/INumber.cpp"
+	"Information/Locale.cpp"
 	"Parser/Strings/StringContent.cpp"
 	"Parser/Strings/StringParser.cpp"
 	"Parser/LineParser.cpp"
 	"Parser/FileParser.cpp"
 	"Parser/CommentParser.cpp"
-	"Utils/Util.cpp")
+	"Utils/Util.cpp"
+	"LocaleManager.cpp")
 
-add_library(internationalization SHARED ${INTERNATIONALIZATION_SOURCES})
-target_compile_features(internationalization PUBLIC cxx_std_17)
+add_library(i18n SHARED ${I18N_SOURCES})
+target_compile_features(i18n PUBLIC cxx_std_17)
 
 # If Linux, we need to make sure we include and link to libuuid.
 if (NOT WIN32)
-	target_include_directories(internationalization
+	target_include_directories(i18n
 		PUBLIC
-		$<BUILD_INTERFACE:${internationalization_SOURCE_DIR}/include>
+		$<BUILD_INTERFACE:${i18n_SOURCE_DIR}/include>
 		$<INSTALL_INTERFACE:include>
 		${UUID_INCLUDE_DIRS})
-	target_link_libraries(internationalization ${UUID_LIBRARIES})
+	target_link_libraries(i18n ${UUID_LIBRARIES})
 else ()
-	target_include_directories(internationalization
+	target_include_directories(i18n
 			PUBLIC
-			$<BUILD_INTERFACE:${internationalization_SOURCE_DIR}/include>
+			$<BUILD_INTERFACE:${i18n_SOURCE_DIR}/include>
 			$<INSTALL_INTERFACE:include>)
 endif ()
 
 if (MSVC)
-	target_compile_options(internationalization
+	target_compile_options(i18n
 		PRIVATE
 		/W4
 	)
-	get_target_property(opts internationalization COMPILE_OPTIONS)
+	get_target_property(opts i18n COMPILE_OPTIONS)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-	target_compile_options(internationalization
+	target_compile_options(i18n
 		PRIVATE
 		-pedantic
 		-pedantic-errors
@@ -43,7 +45,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 		-luuid
 	)
 else ()
-	target_compile_options(internationalization
+	target_compile_options(i18n
 		PRIVATE
 		-pedantic
 		-pedantic-errors

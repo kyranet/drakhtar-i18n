@@ -25,9 +25,9 @@ function Step-Configure([string] $CMake, [string] $Path) {
 
 	$local:Parameters = @("-S", "$Path", "-B", "$Path\build", "-Wno-dev")
 
-	# If -Tests is present, append INTERNATIONALIZATION_BUILD_TESTS to the flags.
+	# If -Tests is present, append I18N_BUILD_TESTS and I18N_LANGUAGE_ALL to the flags.
 	if ($Tests.IsPresent) {
-		$Parameters = $Parameters + "-DINTERNATIONALIZATION_BUILD_TESTS=ON"
+		$Parameters = $Parameters + "-DI18N_BUILD_TESTS=ON" + "-DI18N_LANGUAGE_ALL=ON"
 	}
 
 	# Run the process
