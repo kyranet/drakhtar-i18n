@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
-project(internationalization
+project(i18n
 	VERSION 0.0.1
 	DESCRIPTION "An internationalization engine for the Drakhtar game"
 	HOMEPAGE_URL "https://github.com/kyranet/drakhtar-i18n"
@@ -16,7 +16,9 @@ if(WIN32)
   set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 endif()
 
-if(INTERNATIONALIZATION_BUILD_TESTS)
+option(I18N_BUILD_TESTS "Build drakhtar-i18n tests" OFF)
+
+if(I18N_BUILD_TESTS)
   include(FetchContent)
   FetchContent_Declare(
     googletest
@@ -33,3 +35,4 @@ if(INTERNATIONALIZATION_BUILD_TESTS)
 endif()
 
 add_subdirectory(src)
+add_subdirectory(languages)

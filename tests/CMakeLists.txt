@@ -2,6 +2,7 @@ include(GoogleTest)
 
 set(SOURCES
   "Format/Numbers/Systems/Latin.cpp"
+  "Information/Locale.cpp"
   "Parser/Strings/StringContent.cpp"
   "Parser/Strings/StringParser.cpp"
   "Parser/CommentParser.cpp"
@@ -9,19 +10,28 @@ set(SOURCES
   "Parser/LineParser.cpp"
   "Parser/Tokenizer.cpp"
   "Utils/Util.cpp"
+  "LocaleManager.cpp"
   "main.cpp")
 
-add_executable(internationalization_tests ${SOURCES})
-target_link_libraries(internationalization_tests
+add_executable(i18n_tests ${SOURCES})
+target_link_libraries(i18n_tests
   PUBLIC
-    internationalization
+    i18n
     gtest)
 
 add_custom_command(
-  TARGET internationalization_tests POST_BUILD
+  TARGET i18n_tests POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
-    $<TARGET_FILE_DIR:internationalization>
-    $<TARGET_FILE_DIR:internationalization_tests>
+    $<TARGET_FILE_DIR:i18n>
+    $<TARGET_FILE_DIR:i18n_tests>
 )
 
-gtest_discover_tests(internationalization_tests)
+add_custom_command(
+  TARGET i18n_tests POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+    $<TARGET_FILE_DIR:i18n_languages>
+    $<TARGET_FILE_DIR:i18n_tests>/languages
+)
+
+gtest_discover_tests(i18n_tests
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:i18n_tests>)
