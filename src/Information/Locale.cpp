@@ -30,7 +30,7 @@ void Locale::load(const std::filesystem::path& path,
       continue;
     }
 
-    std::ifstream s{file};
+    std::ifstream s{file.path()};
     FileParser fp{s};
     for (const auto& pair : fp.run()) {
       const auto key = prefix + pair.first;

@@ -1,19 +1,32 @@
+set(ASSET_FILES)
+set(LANGUAGES
+	"en"
+	"en-US"
+	"es"
+	"es-ES")
+
 option(I18N_LANGUAGE_ALL "Include all language data" OFF)
 
-macro(I18N_REGISTER key directory)
-	option(I18N_LANGUAGE_${key} "Include languages/${directory}" OFF)
+foreach(language ${LANGUAGES})
+	# If all languages are to be included, append the entry nevertheless:
+	if (I18N_LANGUAGE_ALL)
+		list(APPEND ASSET_FILES "${language}/.meta.txt")
+	else()
+		# Convert the string to uppercase (en-US -> EN-US, es-ES -> ES-ES):
+		string(TOUPPER ${language} __DIRECTORY__)
 
-	if (I18N_LANGUAGE_ALL OR I18N_LANGUAGE_${key})
-		list(APPEND ASSET_FILES "${directory}/.meta.txt")
+		# Replace "-" with "_" (EN-US -> EN_US, ES-ES -> ES_ES):
+		string(REPLACE "-" "_" __DIRECTORY__ ${__DIRECTORY__})
+
+		# Define the option:
+		option(I18N_LANGUAGE_${__DIRECTORY__} "Include languages/${language}" OFF)
+
+		# If the option was given, append the entry:
+		if (I18N_LANGUAGE_${__DIRECTORY__})
+			list(APPEND ASSET_FILES "${language}/.meta.txt")
+		endif()
 	endif()
-endmacro(I18N_REGISTER)
-
-set(ASSET_FILES)
-
-I18N_REGISTER(EN "en")
-I18N_REGISTER(EN_US "en-US")
-I18N_REGISTER(ES "es")
-I18N_REGISTER(ES_ES "es-ES")
+endforeach()
 
 foreach(resource ${ASSET_FILES})
 	configure_file(${resource} languages/${resource} COPYONLY)
