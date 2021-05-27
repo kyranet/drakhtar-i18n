@@ -45,7 +45,7 @@ jobs:
       - uses: ammaraskar/gcc-problem-matcher@master
       - name: Build Project
         run: |
-          cmake -B build -DI18N_BUILD_TESTS=ON
+          cmake -B build -DI18N_BUILD_TESTS=ON -DI18N_LANGUAGE_ALL=ON
           cmake --build build --config ${{ matrix.configuration }}
 
       - name: Run Tests
