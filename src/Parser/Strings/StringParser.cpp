@@ -4,7 +4,6 @@
 
 #include <sstream>
 
-#include "Parser/Strings/StringContent.h"
 #include "Parser/Tokenizer.h"
 #include "Utils/Util.h"
 
@@ -134,7 +133,7 @@ std::string StringParser::parseHexadecimal() { return parseHexadecimal(2); }
 
 std::string StringParser::parseUnicode() { return parseHexadecimal(4); }
 
-std::tuple<size_t, std::vector<std::string>> StringParser::parseVariable() {
+variable_t StringParser::parseVariable() {
   auto& t = tokenizer();
 
   bool defined{false};
@@ -144,7 +143,7 @@ std::tuple<size_t, std::vector<std::string>> StringParser::parseVariable() {
   char c;
   while (t.next(c)) {
     if (c == '}') {
-      if (defined) return std::make_tuple(n, mods);
+      if (defined) return variable_t{n, mods};
 
       throw std::runtime_error("Received empty variable place-holder.");
     }

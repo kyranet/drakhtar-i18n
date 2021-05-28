@@ -2,13 +2,11 @@
 
 #pragma once
 
-#include <tuple>
 #include <vector>
 
 #include "Parser/IParser.h"
+#include "Parser/Strings/StringContent.h"
 #include "Parser/Tokenizer.h"
-
-class StringContent;
 
 class StringParser : public IParser<StringContent> {
   std::string parseEscape();
@@ -17,7 +15,7 @@ class StringParser : public IParser<StringContent> {
   std::string parseHexadecimal(size_t size);
   std::string parseUnicode();
 
-  std::tuple<size_t, std::vector<std::string>> parseVariable();
+  variable_t parseVariable();
   std::vector<std::string> parseModifiers();
 
  public:

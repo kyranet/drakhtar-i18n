@@ -3,9 +3,10 @@
 #pragma once
 
 #include <string>
-#include <tuple>
 #include <variant>
 #include <vector>
+
+using variable_t = std::tuple<size_t, std::vector<std::string>>;
 
 class StringContent final {
   enum class PartType { Content, Variable };
@@ -18,7 +19,7 @@ class StringContent final {
     PartType type;
     std::vector<std::string> modifiers;
 
-    explicit ContentPart(std::tuple<size_t, std::vector<std::string>> var)
+    explicit ContentPart(variable_t var)
         : value(std::get<0>(var)),
           type(PartType::Variable),
           modifiers(std::get<1>(var)) {}
@@ -83,7 +84,7 @@ class StringContent final {
    * @param index The index of the variable to read from when running.
    * @param mods The modifiers to be applied to the variable.
    */
-  inline void add(std::tuple<size_t, std::vector<std::string>> var) {
+  inline void add(variable_t var) {
     add(ContentPart{var});
     dynamic_ = true;
   };
