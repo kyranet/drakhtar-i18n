@@ -6,6 +6,6 @@
 
 class ITransformer {
  public:
-  ITransformer(){};
+  ITransformer() = default;
   virtual std::string format(std::string s) = 0;
 };

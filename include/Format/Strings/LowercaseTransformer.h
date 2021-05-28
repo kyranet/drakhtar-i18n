@@ -9,8 +9,6 @@
 
 class LowercaseTransformer : public ITransformer {
  public:
-  LowercaseTransformer() : ITransformer(){};
-
   std::string format(std::string s) override {
     std::for_each(s.begin(), s.end(), [](char& c) { c = ::tolower(c); });
     return s;

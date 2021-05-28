@@ -9,8 +9,6 @@
 
 class UppercaseTransformer : public ITransformer {
  public:
-  UppercaseTransformer() : ITransformer(){};
-
   std::string format(std::string s) override {
     std::for_each(s.begin(), s.end(), [](char& c) { c = ::toupper(c); });
     return s;

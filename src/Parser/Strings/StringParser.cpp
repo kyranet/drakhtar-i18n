@@ -170,23 +170,23 @@ std::tuple<size_t, std::vector<std::string>> StringParser::parseVariable() {
 std::vector<std::string> StringParser::parseModifiers() {
   auto& t = tokenizer();
   std::vector<std::string> mods = std::vector<std::string>();
-  std::string mod;
+  std::stringstream mod;
   char c;
 
   while (t.next(c)) {
     if (c == '}') {
-      mods.push_back(mod);
+      mods.push_back(mod.str());
       t.undo();
       return mods;
     }
 
     if (c == ':') {
-      mods.push_back(mod);
-      mod.clear();
+      mods.push_back(mod.str());
+      mod.str(std::string());
       continue;
     }
 
-    mod.push_back(c);
+    mod << c;
   }
   return mods;
 }
