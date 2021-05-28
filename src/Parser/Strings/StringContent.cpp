@@ -5,6 +5,8 @@
 #include <cassert>
 #include <sstream>
 
+#include "Format/Strings/TransformerManager.h"
+
 std::string StringContent::run(std::vector<std::string> variables) const {
   if (empty()) return "";
   if (!dynamic()) return parts_[0].content();
@@ -15,7 +17,11 @@ std::string StringContent::run(std::vector<std::string> variables) const {
       ss << part.content();
     } else {
       assert(part.variable() < variables.size());
-      ss << variables[part.variable()];
+      std::string s = variables[part.variable()];
+
+      for (const auto& t : part.modifiers)
+        s = TransformerManager::getInstance().format(s, t);
+      ss << s;
     }
   }
 

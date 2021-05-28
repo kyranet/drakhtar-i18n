@@ -4,7 +4,6 @@
 
 #include <sstream>
 
-#include "Parser/Strings/StringContent.h"
 #include "Parser/Tokenizer.h"
 #include "Utils/Util.h"
 
@@ -134,16 +133,18 @@ std::string StringParser::parseHexadecimal() { return parseHexadecimal(2); }
 
 std::string StringParser::parseUnicode() { return parseHexadecimal(4); }
 
-size_t StringParser::parseVariable() {
+variable_t StringParser::parseVariable() {
   auto& t = tokenizer();
 
   bool defined{false};
   size_t n{0};
+  std::vector<std::string> mods;
 
   char c;
   while (t.next(c)) {
     if (c == '}') {
-      if (defined) return n;
+      if (defined) return variable_t{n, mods};
+
       throw std::runtime_error("Received empty variable place-holder.");
     }
 
@@ -154,8 +155,37 @@ size_t StringParser::parseVariable() {
       continue;
     }
 
+    if (c == ':') {
+      mods = parseModifiers();
+      continue;
+    }
+
     unexpectedCharacter(c, "a variable");
   }
 
   unexpectedEndOfInput();
+}
+
+std::vector<std::string> StringParser::parseModifiers() {
+  auto& t = tokenizer();
+  std::vector<std::string> mods = std::vector<std::string>();
+  std::stringstream mod;
+  char c;
+
+  while (t.next(c)) {
+    if (c == '}') {
+      mods.push_back(mod.str());
+      t.undo();
+      return mods;
+    }
+
+    if (c == ':') {
+      mods.push_back(mod.str());
+      mod.str(std::string());
+      continue;
+    }
+
+    mod << c;
+  }
+  return mods;
 }
