@@ -8,7 +8,7 @@
 enum class numberSystem { latn };
 using nSys = numberSystem;
 
-class NumericMetadata {
+class NumberMetadata {
  private:
   // nSys lan_system;
   std::string decimal;
