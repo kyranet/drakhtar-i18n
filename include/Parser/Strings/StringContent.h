@@ -6,7 +6,7 @@
 #include <variant>
 #include <vector>
 
-using variable_t = std::tuple<size_t, std::vector<std::string>>;
+typedef std::tuple<size_t, std::vector<std::string>> variable_t;
 
 class StringContent final {
   enum class PartType { Content, Variable };
