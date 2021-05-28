@@ -3,10 +3,11 @@
 #pragma once
 
 #include <string>
+#include <tuple>
 #include <variant>
 #include <vector>
 
-typedef std::tuple<size_t, std::vector<std::string>> variable_t;
+using variable_t = std::tuple<size_t, std::vector<std::string>>;
 
 class StringContent final {
   enum class PartType { Content, Variable };
