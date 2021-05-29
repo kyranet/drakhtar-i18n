@@ -123,7 +123,7 @@ class StringContent final {
    * @param info info which contains both index and type of the variable to read
    * from when running.
    */
-  inline void add(VariableInfo& info) {
+  inline void add(VariableInfo info) {
     add(info.index, info.type, info.modifiers);
   }
 
