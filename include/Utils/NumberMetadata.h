@@ -26,7 +26,7 @@ class NumberMetadata {
   std::string timeSeparator;
 
  public:
-  NumericMetadata(size_t number, numberSystem system) { analice(number); };
+  NumberMetadata(size_t number, numberSystem system) { analice(number); };
 
  private:
   void analice(size_t number);

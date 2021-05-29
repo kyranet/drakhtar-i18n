@@ -3,7 +3,6 @@
 #include "Utils/NumberMetadata.h"
 
 #include "Information/Locale.h"
-#include
 
 void NumberMetadata::analice(size_t number) {
   // data map assignation values
