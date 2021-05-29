@@ -18,8 +18,8 @@ std::string StringContent::run(std::vector<std::string> variables) const {
     } else {
       assert(part.variable() < variables.size());
       std::string s = variables[part.variable()];
-
-      for (const auto& t : part.modifiers)
+      auto& modifiers = modifiers_[part.variable()];
+      for (const auto& t : modifiers)
         s = TransformerManager::getInstance().format(s, t);
       ss << s;
     }

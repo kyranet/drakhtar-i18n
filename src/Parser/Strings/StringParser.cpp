@@ -4,6 +4,7 @@
 
 #include <sstream>
 
+#include "Parser/Strings/StringContent.h"
 #include "Parser/Tokenizer.h"
 #include "Utils/Util.h"
 
@@ -133,19 +134,18 @@ std::string StringParser::parseHexadecimal() { return parseHexadecimal(2); }
 
 std::string StringParser::parseUnicode() { return parseHexadecimal(4); }
 
-variable_t StringParser::parseVariable() {
 VariableInfo StringParser::parseVariable() {
   auto& t = tokenizer();
 
   bool defined{false};
   size_t n{0};
   std::vector<std::string> mods;
+  Type type = Type::String;
 
   char c;
   while (t.next(c)) {
     if (c == '}') {
-      if (defined) return {n, Type::String};
-      if (defined) return variable_t{n, mods};
+      if (defined) return {n, type, mods};
 
       throw std::runtime_error("Received empty variable place-holder.");
     }
@@ -157,14 +157,17 @@ VariableInfo StringParser::parseVariable() {
       continue;
     }
 
-    if (c == ':') {
-      mods = parseModifiers();
+    if (Util::isLetter(c)) {
+      if (!defined) unexpectedCharacter(c, "an index before reading a type");
+      type = parseType(c);
       continue;
     }
 
-    if (Util::isLetter(c)) {
-      if (!defined) unexpectedCharacter(c, "an index before reading a type");
-      return {n, parseType(c)};
+    if (c == ':') {
+      if (!defined)
+        unexpectedCharacter(c, "an index before reading a modifier");
+      mods = parseModifiers();
+      continue;
     }
 
     unexpectedCharacter(c, "a variable");
@@ -173,7 +176,7 @@ VariableInfo StringParser::parseVariable() {
   unexpectedEndOfInput();
 }
 
-std::vector<std::string> StringParser::parseModifiers() {
+const std::vector<std::string> StringParser::parseModifiers() {
   auto& t = tokenizer();
   std::vector<std::string> mods = std::vector<std::string>();
   std::stringstream mod;
@@ -218,7 +221,7 @@ Type StringParser::parseType(char c) {
   char type = c;
 
   while (t.next(c)) {
-    if (c == '}') {
+    if (c == '}' || c == ':') {
       if (defined) break;
       throw std::runtime_error("Cannot identify type: size not defined.");
     }
@@ -233,7 +236,9 @@ Type StringParser::parseType(char c) {
     unexpectedCharacter(c, "a size");
   }
 
-  if (c != '}') unexpectedEndOfInput();
+  if (c != '}' && c != ':') unexpectedEndOfInput();
+
+  t.undo();
 
   switch (type) {
     case 's':

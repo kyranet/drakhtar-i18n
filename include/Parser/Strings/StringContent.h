@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <cassert>
 #include <string>
 #include <tuple>
 #include <variant>
@@ -25,9 +26,10 @@ enum class Type {
 struct VariableInfo {
   size_t index;
   Type type;
+  std::vector<std::string> modifiers;
 };
 
-using variable_t = std::tuple<size_t, std::vector<std::string>>;
+using modifiers = std::vector<std::vector<std::string>>;
 
 class StringContent final {
   enum class PartType { Content, Variable };
@@ -37,18 +39,15 @@ class StringContent final {
     std::variant<size_t, std::string> value;
 
    public:
-    PartType type;
-    std::vector<std::string> modifiers;
+    PartType parType;
 
-    explicit ContentPart(variable_t var)
-        : value(std::get<0>(var)),
-          type(PartType::Variable),
-          modifiers(std::get<1>(var)) {}
+    explicit ContentPart(size_t value)
+        : value(value), parType(PartType::Variable) {}
     explicit ContentPart(const std::string& content)
-        : value(content), type(PartType::Content) {}
+        : value(content), parType(PartType::Content) {}
 
     [[nodiscard]] inline bool isVariable() const noexcept {
-      return type == PartType::Variable;
+      return parType == PartType::Variable;
     };
 
     [[nodiscard]] inline size_t variable() const noexcept {
@@ -60,7 +59,7 @@ class StringContent final {
     }
 
     [[nodiscard]] inline bool isContent() const noexcept {
-      return type == PartType::Content;
+      return parType == PartType::Content;
     };
 
     [[nodiscard]] inline const std::string& content() const noexcept {
@@ -74,6 +73,7 @@ class StringContent final {
 
   std::vector<Type> types_{};
   std::vector<ContentPart> parts_{};
+  modifiers modifiers_{};
   bool dynamic_{false};
 
   /**
@@ -104,13 +104,17 @@ class StringContent final {
   /**
    * Adds a new variable part into the content.
    * @param index The index of the variable to read from when running.
-   * @param mods The modifiers to be applied to the variable.
    * @param type The type of the variable to read from when running.
+   * @param mods The modifiers to be applied to the variable.
    */
-  inline void add(variable_t var, Type type) {
-    add(ContentPart{ var });
-    if (index >= types_.size()) types_.resize(index);
+  inline void add(size_t index, Type type, std::vector<std::string> mods) {
+    add(ContentPart{index});
+    if (index >= types_.size()) {
+      types_.resize(index + 1);
+      modifiers_.resize(index + 1);
+    }
     types_[index] = type;
+    modifiers_[index] = mods;
     dynamic_ = true;
   };
 
@@ -119,7 +123,9 @@ class StringContent final {
    * @param info info which contains both index and type of the variable to read
    * from when running.
    */
-  inline void add(VariableInfo info) { add(info.index, info.type); }
+  inline void add(VariableInfo& info) {
+    add(info.index, info.type, info.modifiers);
+  }
 
   /**
    * Processes the string with a set of variables.
@@ -149,5 +155,12 @@ class StringContent final {
    */
   [[nodiscard]] inline const std::vector<Type>& types() const noexcept {
     return types_;
+  }
+
+  /**
+   * Get the argument modifiers of the content.
+   */
+  [[nodiscard]] inline const modifiers& modifiers() const noexcept {
+    return modifiers_;
   }
 };
