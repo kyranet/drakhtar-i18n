@@ -29,7 +29,7 @@ struct VariableInfo {
   std::vector<std::string> modifiers;
 };
 
-using modifiers = std::vector<std::vector<std::string>>;
+using variableModifiers = std::vector<std::vector<std::string>>;
 
 class StringContent final {
   enum class PartType { Content, Variable };
@@ -73,7 +73,7 @@ class StringContent final {
 
   std::vector<Type> types_{};
   std::vector<ContentPart> parts_{};
-  modifiers modifiers_{};
+  variableModifiers modifiers_{};
   bool dynamic_{false};
 
   /**
@@ -160,7 +160,7 @@ class StringContent final {
   /**
    * Get the argument modifiers of the content.
    */
-  [[nodiscard]] inline const modifiers& modifiers() const noexcept {
+  [[nodiscard]] inline const variableModifiers& modifiers() const noexcept {
     return modifiers_;
   }
 };
