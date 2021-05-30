@@ -1,5 +1,4 @@
 set(I18N_SOURCES
-	"Format/Numbers/INumber.cpp"
 	"Format/Strings/TransformerManager.cpp"
 	"Information/Locale.cpp"
 	"Information/LocaleComponents.cpp"
@@ -10,7 +9,6 @@ set(I18N_SOURCES
 	"Parser/CommentParser.cpp"
 	"Utils/Util.cpp"
 	"Utils/NumberMetadata.cpp"
-	"Utils/Util.cpp"
 	"LocaleManager.cpp")
 
 add_library(i18n SHARED ${I18N_SOURCES})
