@@ -20,7 +20,7 @@ class NumberMetadata {
   std::string exponential_{};
   std::string superscriptingExponent_{};
   std::string perMille_{};
-  std::string infinity_{};
+  std::string infinite_{};
   std::string nan_{};
   std::string timeSeparator_{};
 
@@ -107,7 +107,7 @@ class NumberMetadata {
    * Gets the 'infinity' symbol.
    */
   [[nodiscard]] const std::string& infinity() const noexcept {
-    return infinity_;
+    return infinite_;
   }
 
   /**

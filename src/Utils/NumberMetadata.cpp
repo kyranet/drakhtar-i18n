@@ -18,7 +18,7 @@ NumberMetadata::NumberMetadata(std::map<std::string, StringContent> map) {
   exponential_ = map.at("EXPONENTIAL").run({});
   superscriptingExponent_ = map.at("SUPER_SCRIPTING_EXPONENT").run({});
   perMille_ = map.at("PER_MILLE").run({});
-  infinity_ = map.at("INFINITILY").run({});
+  infinite_ = map.at("INFINITILY").run({});
   nan_ = map.at("NAN").run({});
   timeSeparator_ = map.at("TIME_SEPARATOR").run({});
 
