@@ -6,6 +6,7 @@ set(SOURCES
   "Format/Strings/LowercaseTransformer.cpp"
   "Format/Numbers/Systems/Latin.cpp"
   "Information/Locale.cpp"
+  "Information/LocaleComponents.cpp"
   "Parser/Strings/StringContent.cpp"
   "Parser/Strings/StringParser.cpp"
   "Parser/CommentParser.cpp"

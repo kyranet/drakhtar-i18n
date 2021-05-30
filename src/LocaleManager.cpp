@@ -15,7 +15,7 @@ int32_t LocaleManager::internalLoad(bool metadataOnly) {
   assert(std::filesystem::is_directory("languages"));
 
   // Iterate over the entire languages directory:
-  int32_t loaded{0};
+  int32_t count{0};
   for (auto& file : std::filesystem::directory_iterator("languages")) {
     // If the entry is not a directory, skip:
     if (!file.is_directory()) {
@@ -29,12 +29,12 @@ int32_t LocaleManager::internalLoad(bool metadataOnly) {
 
     // Load the directory:
     const auto locale = file.path().filename().string();
-    if (internalLoad(locale, metadataOnly)) {
-      ++loaded;
+    if (!loaded(locale) && internalLoad(locale, metadataOnly)) {
+      ++count;
     }
   }
 
-  return loaded;
+  return count;
 }
 
 bool LocaleManager::internalLoad(const std::string& locale, bool metadataOnly) {
@@ -49,7 +49,7 @@ bool LocaleManager::internalLoad(const std::string& locale, bool metadataOnly) {
   const auto meta = path / ".meta.txt";
   if (!std::filesystem::exists(meta)) return false;
 
-  Locale l{};
+  Locale l{*this};
   l.init(locale);
 
   names_.insert({l.locale(), l.name()});

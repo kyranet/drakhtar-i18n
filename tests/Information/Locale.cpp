@@ -4,15 +4,21 @@
 
 #include <fstream>
 
+#include "LocaleManager.h"
+
 TEST(Locale, non_initialized_state) {
-  Locale l{};
+  LocaleManager manager{};
+  Locale l{manager};
+
   EXPECT_TRUE(l.name().empty());
   EXPECT_TRUE(l.locale().empty());
   EXPECT_EQ(l.size(), 0);
 }
 
 TEST(Locale, initialized_state) {
-  Locale l{};
+  LocaleManager manager{};
+  Locale l{manager};
+
   EXPECT_NO_THROW(l.init("en-US"));
   EXPECT_EQ(l.name(), "English (United States)");
   EXPECT_EQ(l.locale(), "en-US");
@@ -20,7 +26,9 @@ TEST(Locale, initialized_state) {
 }
 
 TEST(Locale, load_with_no_content) {
-  Locale l{};
+  LocaleManager manager{};
+  Locale l{manager};
+
   EXPECT_NO_THROW(l.init("en-US"));
   EXPECT_NO_THROW(l.load());
   EXPECT_EQ(l.size(), 0);
@@ -42,7 +50,9 @@ TEST(Locale, load_with_content) {
   fMisc << "HELLO=\"Hello {0}!\"\n";
   fMisc.close();
 
-  Locale l{};
+  LocaleManager manager{};
+  Locale l{manager};
+
   EXPECT_NO_THROW(l.init("fr-FR"));
   EXPECT_NO_THROW(l.load());
   EXPECT_EQ(l.size(), 1);
