@@ -42,7 +42,7 @@ TEST(Locale, load_with_content) {
 
   const auto meta = path / ".meta.txt";
   std::ofstream fMeta(meta);
-  fMeta << "NAME=\"Fran�ais (France)\"\n";
+  fMeta << "NAME=\"Français (France)\"\n";
   fMeta.close();
 
   const auto misc = path / "misc.txt";
