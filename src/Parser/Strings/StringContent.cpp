@@ -12,6 +12,7 @@ std::string StringContent::run(std::vector<std::string> variables) const {
   if (!dynamic()) return parts_[0].content();
 
   std::stringstream ss{};
+  const auto& transformers = TransformerManager::getInstance();
   for (const auto& part : parts_) {
     if (part.isContent()) {
       ss << part.content();
@@ -19,8 +20,7 @@ std::string StringContent::run(std::vector<std::string> variables) const {
       assert(part.variable() < variables.size());
       std::string s = variables[part.variable()];
       auto& modifiers = modifiers_[part.variable()];
-      for (const auto& t : modifiers)
-        s = TransformerManager::getInstance().format(s, t);
+      for (const auto& t : modifiers) s = transformers.format(s, t);
       ss << s;
     }
   }

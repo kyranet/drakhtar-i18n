@@ -13,10 +13,8 @@ class IParser {
 
   [[noreturn]] inline void unexpectedCharacter(char c,
                                                const std::string& type) {
-    std::string s;
-    s.push_back(c);
-    throw std::runtime_error("Unexpected character '" + s + "', " + type +
-                             " was expected.");
+    throw std::runtime_error("Unexpected character '" + Util::format(c) +
+                             "', " + type + " was expected.");
   }
 
   [[noreturn]] inline void unexpectedEndOfInput() {

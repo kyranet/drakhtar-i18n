@@ -180,8 +180,8 @@ const std::vector<std::string> StringParser::parseModifiers() {
   auto& t = tokenizer();
   std::vector<std::string> mods = std::vector<std::string>();
   std::stringstream mod;
-  char c;
 
+  char c;
   while (t.next(c)) {
     if (c == '}') {
       mods.push_back(mod.str());
@@ -197,6 +197,7 @@ const std::vector<std::string> StringParser::parseModifiers() {
 
     mod << c;
   }
+
   return mods;
 }
 
@@ -206,10 +207,13 @@ Type StringParser::parseType(char c) {
   bool defined{false};
   size_t n{0};
 
+  // TODO(Antonio): Consume integer only if 'i', 'u', or 'f':
+  // TODO(Antonio): Add tests to ensure 'sX' and 'bX' throw.
   switch (c) {
     case 's':
     case 'b':
       defined = true;
+      break;
     case 'i':
     case 'u':
     case 'f':
@@ -223,7 +227,8 @@ Type StringParser::parseType(char c) {
   while (t.next(c)) {
     if (c == '}' || c == ':') {
       if (defined) break;
-      throw std::runtime_error("Cannot identify type: size not defined.");
+      throw std::runtime_error("A numeric size was expected after '" +
+                               Util::format(type) + "', but none was given.");
     }
 
     if (Util::isNumber(c)) {
@@ -256,8 +261,8 @@ Type StringParser::parseType(char c) {
         case 64:
           return Type::Int64;
         default:
-          throw std::runtime_error(
-              "Cannot identify type: int size not supported.");
+          throw std::runtime_error("Signed integer with a size of " +
+                                   std::to_string(n) + " bits not supported.");
       }
     case 'u':
       switch (n) {
@@ -270,8 +275,8 @@ Type StringParser::parseType(char c) {
         case 64:
           return Type::UInt64;
         default:
-          throw std::runtime_error(
-              "Cannot identify type: usigned size not supported.");
+          throw std::runtime_error("Unsigned integer with a size of " +
+                                   std::to_string(n) + " bits not supported.");
       }
     case 'f':
       switch (n) {
@@ -280,8 +285,8 @@ Type StringParser::parseType(char c) {
         case 64:
           return Type::Float64;
         default:
-          throw std::runtime_error(
-              "Cannot identify type: float size not supported.");
+          throw std::runtime_error("Floating point number with a size of " +
+                                   std::to_string(n) + " bits not supported.");
       }
     default:
       unexpectedCharacter(type, "a numeric type");

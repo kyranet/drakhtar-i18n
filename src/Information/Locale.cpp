@@ -99,48 +99,47 @@ std::string Locale::format(const std::string* arg...) {
   va_start(args, arg);
   auto& key = arg;
 
-  // TODO: Omar's part, get the real content using key.
-  StringContent content{};
+  const auto& content = keys_.at(*key);
 
-  std::vector<std::string> argsFormat{};
+  std::vector<std::string> formatted{};
 
   for (const auto type : content.types()) {
     switch (type) {
       case Type::String:
-        argsFormat.push_back(va_arg(args, std::string));
+        formatted.push_back(va_arg(args, std::string));
         break;
       case Type::Boolean:
-        argsFormat.push_back(display(va_arg(args, bool)));
+        formatted.push_back(display(va_arg(args, bool)));
         break;
       case Type::Int8:
-        argsFormat.push_back(display(va_arg(args, int8_t)));
+        formatted.push_back(display(va_arg(args, int8_t)));
         break;
       case Type::Int16:
-        argsFormat.push_back(display(va_arg(args, int16_t)));
+        formatted.push_back(display(va_arg(args, int16_t)));
         break;
       case Type::Int32:
-        argsFormat.push_back(display(va_arg(args, int32_t)));
+        formatted.push_back(display(va_arg(args, int32_t)));
         break;
       case Type::Int64:
-        argsFormat.push_back(display(va_arg(args, int64_t)));
+        formatted.push_back(display(va_arg(args, int64_t)));
         break;
       case Type::UInt8:
-        argsFormat.push_back(display(va_arg(args, uint8_t)));
+        formatted.push_back(display(va_arg(args, uint8_t)));
         break;
       case Type::UInt16:
-        argsFormat.push_back(display(va_arg(args, uint16_t)));
+        formatted.push_back(display(va_arg(args, uint16_t)));
         break;
       case Type::UInt32:
-        argsFormat.push_back(display(va_arg(args, uint32_t)));
+        formatted.push_back(display(va_arg(args, uint32_t)));
         break;
       case Type::UInt64:
-        argsFormat.push_back(display(va_arg(args, uint32_t)));
+        formatted.push_back(display(va_arg(args, uint32_t)));
         break;
       case Type::Float32:
-        argsFormat.push_back(display(va_arg(args, float)));
+        formatted.push_back(display(va_arg(args, float)));
         break;
       case Type::Float64:
-        argsFormat.push_back(display(va_arg(args, double)));
+        formatted.push_back(display(va_arg(args, double)));
         break;
       default:
         // MALO, ESO NO SE HACE
@@ -148,60 +147,82 @@ std::string Locale::format(const std::string* arg...) {
     }
   }
 
-  return content.run(argsFormat);
+  return content.run(formatted);
 }
 
 std::string Locale::display(bool arg) {
-  // TODO: Display de verdad.
+  // TODO: Implement method.
+  (void)arg;
+
   return "";
 }
 
 std::string Locale::display(int8_t arg) {
-  // TODO: Display de verdad.
+  // TODO: Implement method.
+  (void)arg;
+
   return "";
 }
 
 std::string Locale::display(int16_t arg) {
-  // TODO: Display de verdad.
+  // TODO: Implement method.
+  (void)arg;
+
   return "";
 }
 
 std::string Locale::display(int32_t arg) {
-  // TODO: Display de verdad.
+  // TODO: Implement method.
+  (void)arg;
+
   return "";
 }
 
 std::string Locale::display(int64_t arg) {
-  // TODO: Display de verdad.
+  // TODO: Implement method.
+  (void)arg;
+
   return "";
 }
 
 std::string Locale::display(uint8_t arg) {
-  // TODO: Display de verdad.
+  // TODO: Implement method.
+  (void)arg;
+
   return "";
 }
 
 std::string Locale::display(uint16_t arg) {
-  // TODO: Display de verdad.
+  // TODO: Implement method.
+  (void)arg;
+
   return "";
 }
 
 std::string Locale::display(uint32_t arg) {
-  // TODO: Display de verdad.
+  // TODO: Implement method.
+  (void)arg;
+
   return "";
 }
 
 std::string Locale::display(uint64_t arg) {
-  // TODO: Display de verdad.
+  // TODO: Implement method.
+  (void)arg;
+
   return "";
 }
 
 std::string Locale::display(float arg) {
-  // TODO: Display de verdad.
+  // TODO: Implement method.
+  (void)arg;
+
   return "";
 }
 
 std::string Locale::display(double arg) {
-  // TODO: Display de verdad.
+  // TODO: Implement method.
+  (void)arg;
+
   return "";
 }

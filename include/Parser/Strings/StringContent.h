@@ -23,13 +23,14 @@ enum class Type {
   Float64
 };
 
+using variable_modifiers_t = std::vector<std::string>;
+using modifiers_t = std::vector<variable_modifiers_t>;
+
 struct VariableInfo {
   size_t index;
   Type type;
-  std::vector<std::string> modifiers;
+  variable_modifiers_t modifiers;
 };
-
-using variableModifiers = std::vector<std::vector<std::string>>;
 
 class StringContent final {
   enum class PartType { Content, Variable };
@@ -39,15 +40,15 @@ class StringContent final {
     std::variant<size_t, std::string> value;
 
    public:
-    PartType parType;
+    PartType type;
 
     explicit ContentPart(size_t value)
-        : value(value), parType(PartType::Variable) {}
+        : value(value), type(PartType::Variable) {}
     explicit ContentPart(const std::string& content)
-        : value(content), parType(PartType::Content) {}
+        : value(content), type(PartType::Content) {}
 
     [[nodiscard]] inline bool isVariable() const noexcept {
-      return parType == PartType::Variable;
+      return type == PartType::Variable;
     };
 
     [[nodiscard]] inline size_t variable() const noexcept {
@@ -59,7 +60,7 @@ class StringContent final {
     }
 
     [[nodiscard]] inline bool isContent() const noexcept {
-      return parType == PartType::Content;
+      return type == PartType::Content;
     };
 
     [[nodiscard]] inline const std::string& content() const noexcept {
@@ -73,7 +74,7 @@ class StringContent final {
 
   std::vector<Type> types_{};
   std::vector<ContentPart> parts_{};
-  variableModifiers modifiers_{};
+  modifiers_t modifiers_{};
   bool dynamic_{false};
 
   /**
@@ -107,7 +108,8 @@ class StringContent final {
    * @param type The type of the variable to read from when running.
    * @param mods The modifiers to be applied to the variable.
    */
-  inline void add(size_t index, Type type, std::vector<std::string> mods) {
+  inline void add(size_t index, Type type,
+                  const std::vector<std::string>& mods) {
     add(ContentPart{index});
     if (index >= types_.size()) {
       types_.resize(index + 1);
@@ -123,7 +125,7 @@ class StringContent final {
    * @param info info which contains both index and type of the variable to read
    * from when running.
    */
-  inline void add(VariableInfo info) {
+  inline void add(const VariableInfo& info) {
     add(info.index, info.type, info.modifiers);
   }
 
@@ -160,7 +162,7 @@ class StringContent final {
   /**
    * Get the argument modifiers of the content.
    */
-  [[nodiscard]] inline const variableModifiers& modifiers() const noexcept {
+  [[nodiscard]] inline const modifiers_t& modifiers() const noexcept {
     return modifiers_;
   }
 };

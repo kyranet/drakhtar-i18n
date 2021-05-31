@@ -316,8 +316,10 @@ TEST(StringParser, run_string_with_unknown_size_variable) {
   try {
     sp.run();
   } catch (std::runtime_error& e) {
-    EXPECT_EQ(std::string(e.what()),
-              std::string("Cannot identify type: size not defined."));
+    EXPECT_EQ(
+        std::string(e.what()),
+        std::string(
+            "A numeric size was expected after 'i', but none was given."));
   }
 }
 
@@ -340,8 +342,9 @@ TEST(StringParser, run_string_with_unsupported_integer_size) {
   try {
     sp.run();
   } catch (std::runtime_error& e) {
-    EXPECT_EQ(std::string(e.what()),
-              std::string("Cannot identify type: int size not supported."));
+    EXPECT_EQ(
+        std::string(e.what()),
+        std::string("Signed integer with a size of 20 bits not supported."));
   }
 }
 
@@ -352,8 +355,9 @@ TEST(StringParser, run_string_with_unsupported_unsigned_size) {
   try {
     sp.run();
   } catch (std::runtime_error& e) {
-    EXPECT_EQ(std::string(e.what()),
-              std::string("Cannot identify type: usigned size not supported."));
+    EXPECT_EQ(
+        std::string(e.what()),
+        std::string("Unsigned integer with a size of 20 bits not supported."));
   }
 }
 
@@ -364,7 +368,9 @@ TEST(StringParser, run_string_with_unsupported_float_size) {
   try {
     sp.run();
   } catch (std::runtime_error& e) {
-    EXPECT_EQ(std::string(e.what()),
-              std::string("Cannot identify type: float size not supported."));
+    EXPECT_EQ(
+        std::string(e.what()),
+        std::string(
+            "Floating point number with a size of 20 bits not supported."));
   }
 }
