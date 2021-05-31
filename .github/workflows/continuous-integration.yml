@@ -8,7 +8,7 @@ on:
 
 jobs:
   CI_Ubuntu:
-    name: Building Drakhtar Internationalization (${{ matrix.os }}, ${{ matrix.configuration }})
+    name: Build (${{ matrix.os }}, ${{ matrix.configuration }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -31,7 +31,7 @@ jobs:
           cmake --build build --config ${{ matrix.configuration }}
 
   CI_Windows:
-    name: Building Drakhtar Internationalization (${{ matrix.os }}, ${{ matrix.configuration }})
+    name: Build (${{ matrix.os }}, ${{ matrix.configuration }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
