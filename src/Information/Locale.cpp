@@ -3,9 +3,8 @@
 #include "Information/Locale.h"
 
 #include <cassert>
-#include <stack>
-#include "Parser/Strings/StringContent.h"
 #include <cstdarg>
+#include <stack>
 
 #include "Information/LocaleComponents.h"
 #include "LocaleManager.h"
