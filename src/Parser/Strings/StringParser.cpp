@@ -139,7 +139,7 @@ VariableInfo StringParser::parseVariable() {
 
   bool defined{false};
   size_t n{0};
-  std::vector<std::string> mods;
+  std::vector<std::string> mods{};
   Type type = Type::String;
 
   char c;

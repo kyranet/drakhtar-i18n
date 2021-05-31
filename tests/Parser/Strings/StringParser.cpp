@@ -231,11 +231,26 @@ TEST(StringParser, run_string_with_64_bytes_float_variable) {
   EXPECT_EQ(variableTypes[0], Type::Float64);
 }
 
+TEST(StringParser, run_string_with_variable_and_transformer) {
+  std::istringstream in{
+      "Hello {0s:uppercase}, {1b:uppercase}, {2i8:uppercase}!\""};
+  StringParser sp{in};
+
+  const auto v = sp.run();
+  auto variableTypes = v.types();
+  auto mods = v.modifiers();
+  EXPECT_EQ(variableTypes.size(), 3);
+  EXPECT_EQ(variableTypes[0], Type::String);
+  EXPECT_EQ(mods[0].size(), 1);
+  EXPECT_EQ(variableTypes[1], Type::Boolean);
+  EXPECT_EQ(mods[1].size(), 1);
+  EXPECT_EQ(variableTypes[2], Type::Int8);
+  EXPECT_EQ(mods[2].size(), 1);
+}
+
 TEST(StringParser, run_string_with_truncated_variable) {
   std::istringstream in{"Hello {"};
   StringParser sp{in};
-
-  // EXPECT_THROW((void)sp.run(), std::runtime_error);
 
   try {
     sp.run();
@@ -248,8 +263,6 @@ TEST(StringParser, run_string_with_empty_variable_placeholder) {
   std::istringstream in{"Hello {}"};
   StringParser sp{in};
 
-  // EXPECT_THROW((void)sp.run(), std::runtime_error);
-
   try {
     sp.run();
   } catch (std::runtime_error& e) {
@@ -261,8 +274,6 @@ TEST(StringParser, run_string_with_empty_variable_placeholder) {
 TEST(StringParser, run_string_with_invalid_character) {
   std::istringstream in{"Hello {/}"};
   StringParser sp{in};
-
-  // EXPECT_THROW((void)sp.run(), std::runtime_error);
 
   try {
     sp.run();
@@ -277,8 +288,6 @@ TEST(StringParser, run_string_with_indexless_variable_placeholder) {
   std::istringstream in{"Hello {b}"};
   StringParser sp{in};
 
-  // EXPECT_THROW((void)sp.run(), std::runtime_error);
-
   try {
     sp.run();
   } catch (std::runtime_error& e) {
@@ -292,8 +301,6 @@ TEST(StringParser, run_string_with_unknown_type_variable) {
   std::istringstream in{"Hello {0q}"};
   StringParser sp{in};
 
-  // EXPECT_THROW((void)sp.run(), std::runtime_error);
-
   try {
     sp.run();
   } catch (std::runtime_error& e) {
@@ -305,8 +312,6 @@ TEST(StringParser, run_string_with_unknown_type_variable) {
 TEST(StringParser, run_string_with_unknown_size_variable) {
   std::istringstream in{"Hello {0i}"};
   StringParser sp{in};
-
-  // EXPECT_THROW((void)sp.run(), std::runtime_error);
 
   try {
     sp.run();
@@ -320,8 +325,6 @@ TEST(StringParser, run_string_with_invalid_character_after_type_recognition) {
   std::istringstream in{"Hello {0iq}"};
   StringParser sp{in};
 
-  // EXPECT_THROW((void)sp.run(), std::runtime_error);
-
   try {
     sp.run();
   } catch (std::runtime_error& e) {
@@ -333,8 +336,6 @@ TEST(StringParser, run_string_with_invalid_character_after_type_recognition) {
 TEST(StringParser, run_string_with_unsupported_integer_size) {
   std::istringstream in{"Hello {0i20}"};
   StringParser sp{in};
-
-  // EXPECT_THROW((void)sp.run(), std::runtime_error);
 
   try {
     sp.run();
@@ -348,8 +349,6 @@ TEST(StringParser, run_string_with_unsupported_unsigned_size) {
   std::istringstream in{"Hello {0u20}"};
   StringParser sp{in};
 
-  // EXPECT_THROW((void)sp.run(), std::runtime_error);
-
   try {
     sp.run();
   } catch (std::runtime_error& e) {
@@ -361,8 +360,6 @@ TEST(StringParser, run_string_with_unsupported_unsigned_size) {
 TEST(StringParser, run_string_with_unsupported_float_size) {
   std::istringstream in{"Hello {0f20}"};
   StringParser sp{in};
-
-  // EXPECT_THROW((void)sp.run(), std::runtime_error);
 
   try {
     sp.run();
