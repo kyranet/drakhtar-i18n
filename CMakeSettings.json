@@ -10,6 +10,11 @@
       "installRoot": "${projectDir}\\build\\install\\${name}",
       "variables": [
         {
+          "name": "BUILD_GMOCK",
+          "value": "OFF",
+          "type": "BOOL"
+        },
+        {
           "name": "I18N_BUILD_TESTS",
           "value": "ON",
           "type": "BOOL"
@@ -30,6 +35,11 @@
       "buildRoot": "${projectDir}\\build",
       "installRoot": "${projectDir}\\build\\install\\${name}",
       "variables": [
+        {
+          "name": "BUILD_GMOCK",
+          "value": "OFF",
+          "type": "BOOL"
+        },
         {
           "name": "I18N_BUILD_TESTS",
           "value": "ON",
