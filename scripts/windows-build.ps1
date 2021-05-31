@@ -27,7 +27,7 @@ function Step-Configure([string] $CMake, [string] $Path) {
 
 	# If -Tests is present, append I18N_BUILD_TESTS and I18N_LANGUAGE_ALL to the flags.
 	if ($Tests.IsPresent) {
-		$Parameters = $Parameters + "-DI18N_BUILD_TESTS=ON" + "-DI18N_LANGUAGE_ALL=ON"
+		$Parameters = $Parameters + "-DBUILD_GMOCK=OFF" + "-DI18N_BUILD_TESTS=ON" + "-DI18N_LANGUAGE_ALL=ON"
 	}
 
 	# Run the process

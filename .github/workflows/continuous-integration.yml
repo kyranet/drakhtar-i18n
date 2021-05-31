@@ -1,4 +1,4 @@
-name: Continuous Integration
+name: CI
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   CI_Ubuntu:
-    name: Building Drakhtar Internationalization (${{ matrix.os }}, ${{ matrix.configuration }})
+    name: Build (${{ matrix.os }}, ${{ matrix.configuration }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -31,7 +31,7 @@ jobs:
           cmake --build build --config ${{ matrix.configuration }}
 
   CI_Windows:
-    name: Building Drakhtar Internationalization (${{ matrix.os }}, ${{ matrix.configuration }})
+    name: Build (${{ matrix.os }}, ${{ matrix.configuration }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -45,7 +45,7 @@ jobs:
       - uses: ammaraskar/gcc-problem-matcher@master
       - name: Build Project
         run: |
-          cmake -B build -DI18N_BUILD_TESTS=ON -DI18N_LANGUAGE_ALL=ON
+          cmake -B build -DBUILD_GMOCK=OFF -DI18N_BUILD_TESTS=ON -DI18N_LANGUAGE_ALL=ON
           cmake --build build --config ${{ matrix.configuration }}
 
       - name: Run Tests
@@ -54,7 +54,7 @@ jobs:
           ctest --build-config ${{ matrix.configuration }} --output-on-failure
 
   Formatting:
-    name: clang-format
+    name: Check Format
     runs-on: ubuntu-latest
 
     steps:
