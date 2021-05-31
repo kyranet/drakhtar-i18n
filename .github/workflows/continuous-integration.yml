@@ -54,7 +54,7 @@ jobs:
           ctest --build-config ${{ matrix.configuration }} --output-on-failure
 
   Formatting:
-    name: clang-format
+    name: Check Format
     runs-on: ubuntu-latest
 
     steps:
