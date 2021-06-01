@@ -33,16 +33,24 @@ void Locale::load(const std::filesystem::path& path,
       continue;
     }
 
+    // If the file is a regular file, skip:
     if (!file.is_regular_file()) {
       continue;
     }
 
-    std::ifstream s{file.path()};
-    FileParser fp{s};
-    for (const auto& pair : fp.run()) {
-      const auto key = prefix + pair.first;
-      keys_.insert({key, pair.second});
+    // If the file is .txt file, read it and store its key/value pairs:
+    if (file.path().extension().string() == ".txt") {
+      std::ifstream s{file.path()};
+      FileParser fp{s};
+      for (const auto& pair : fp.run()) {
+        const auto key = prefix + pair.first;
+        keys_.insert({key, pair.second});
+      }
+      continue;
     }
+
+    // If the file is anything else, save it as an asset:
+    assets_.insert({prefix + name, file.path().string()});
   }
 }
 
