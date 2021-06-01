@@ -1,1 +1,2 @@
 NAME="English"
+NUMERIC_SYSTEM="latn"

@@ -8,8 +8,8 @@
 
 #include "Parser/Strings/StringContent.h"
 
-class INumber;
 class LocaleManager;
+class NumberMetadata;
 struct LocaleComponents;
 
 class Locale {
@@ -17,7 +17,7 @@ class Locale {
   std::string locale_{};
   std::map<std::string, StringContent> keys_{};
   LocaleManager& manager_;
-  INumber* numbers_{};
+  NumberMetadata* numeric_;
   // TODO: IBool
 
   [[nodiscard]] std::string display(bool arg);
@@ -74,8 +74,10 @@ class Locale {
    */
   [[nodiscard]] size_t size() const noexcept { return keys_.size(); }
 
-  [[nodiscard]] const INumber* numbers() const noexcept { return numbers_; }
-  INumber* numbers() noexcept { return numbers_; }
+  [[nodiscard]] const NumberMetadata* numbers() const noexcept {
+    return numeric_;
+  }
+  NumberMetadata* numbers() noexcept { return numeric_; }
 
   std::string format(const std::string* arg...);
 };
