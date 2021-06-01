@@ -94,4 +94,84 @@ class Locale {
   NumberMetadata* numbers() noexcept { return numeric_; }
 
   std::string format(const std::string* arg...);
+
+  template <typename... T>
+  std::string format(const std::string& key, T... args);
+
+  template <typename... T>
+  inline void nextArgument(std::vector<std::string>& formatted, bool value,
+                           T... args) const noexcept {
+    formatted.push_back(display(value));
+    nextArgument(formatted, args...);
+  }
+
+  template <typename... T>
+  inline void nextArgument(std::vector<std::string>& formatted, int8_t value,
+                           T... args) const noexcept {
+    formatted.push_back(display(value));
+    nextArgument(formatted, args...);
+  }
+
+  template <typename... T>
+  inline void nextArgument(std::vector<std::string>& formatted, int16_t value,
+                           T... args) const noexcept {
+    formatted.push_back(display(value));
+    nextArgument(formatted, args...);
+  }
+
+  template <typename... T>
+  inline void nextArgument(std::vector<std::string>& formatted, int32_t value,
+                           T... args) const noexcept {
+    formatted.push_back(display(value));
+    nextArgument(formatted, args...);
+  }
+
+  template <typename... T>
+  inline void nextArgument(std::vector<std::string>& formatted, int64_t value,
+                           T... args) const noexcept {
+    formatted.push_back(display(value));
+    nextArgument(formatted, args...);
+  }
+
+  template <typename... T>
+  inline void nextArgument(std::vector<std::string>& formatted, uint8_t value,
+                           T... args) const noexcept {
+    formatted.push_back(display(value));
+    nextArgument(formatted, args...);
+  }
+
+  template <typename... T>
+  inline void nextArgument(std::vector<std::string>& formatted, uint16_t value,
+                           T... args) const noexcept {
+    formatted.push_back(display(value));
+    nextArgument(formatted, args...);
+  }
+
+  template <typename... T>
+  inline void nextArgument(std::vector<std::string>& formatted, uint32_t value,
+                           T... args) const noexcept {
+    formatted.push_back(display(value));
+    nextArgument(formatted, args...);
+  }
+
+  template <typename... T>
+  inline void nextArgument(std::vector<std::string>& formatted, uint64_t value,
+                           T... args) const noexcept {
+    formatted.push_back(display(value));
+    nextArgument(formatted, args...);
+  }
+
+  template <typename... T>
+  inline void nextArgument(std::vector<std::string>& formatted, float value,
+                           T... args) const noexcept {
+    formatted.push_back(display(value));
+    nextArgument(formatted, args...);
+  }
+
+  template <typename... T>
+  inline void nextArgument(std::vector<std::string>& formatted, double value,
+                           T... args) const noexcept {
+    formatted.push_back(display(value));
+    nextArgument(formatted, args...);
+  }
 };

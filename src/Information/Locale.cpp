@@ -104,6 +104,7 @@ void Locale::load() {
   load(root, "");
 }
 
+/*
 std::string Locale::format(const std::string* arg...) {
   va_list args;
   va_start(args, arg);
@@ -159,80 +160,91 @@ std::string Locale::format(const std::string* arg...) {
 
   return content.run(formatted);
 }
+*/
 
 std::string Locale::display(bool arg) {
   // TODO: Implement method.
   (void)arg;
 
-  return "";
+  return "false";
 }
 
 std::string Locale::display(int8_t arg) {
   // TODO: Implement method.
   (void)arg;
 
-  return "";
+  return "0i8";
 }
 
 std::string Locale::display(int16_t arg) {
   // TODO: Implement method.
   (void)arg;
 
-  return "";
+  return "0i16";
 }
 
 std::string Locale::display(int32_t arg) {
   // TODO: Implement method.
   (void)arg;
 
-  return "";
+  return "0i32";
 }
 
 std::string Locale::display(int64_t arg) {
   // TODO: Implement method.
   (void)arg;
 
-  return "";
+  return "0i64";
 }
 
 std::string Locale::display(uint8_t arg) {
   // TODO: Implement method.
   (void)arg;
 
-  return "";
+  return "0u8";
 }
 
 std::string Locale::display(uint16_t arg) {
   // TODO: Implement method.
   (void)arg;
 
-  return "";
+  return "0u16";
 }
 
 std::string Locale::display(uint32_t arg) {
   // TODO: Implement method.
   (void)arg;
 
-  return "";
+  return "0u32";
 }
 
 std::string Locale::display(uint64_t arg) {
   // TODO: Implement method.
   (void)arg;
 
-  return "";
+  return "0u64";
 }
 
 std::string Locale::display(float arg) {
   // TODO: Implement method.
   (void)arg;
 
-  return "";
+  return "0.0f";
 }
 
 std::string Locale::display(double arg) {
   // TODO: Implement method.
   (void)arg;
 
-  return "";
+  return "0.0d";
+}
+
+template <typename... T>
+std::string Locale::format(const std::string& key, T... args) {
+  const auto& content = keys_.at(key);
+
+  std::vector<std::string> formatted{};
+  nextArgument(formatted, args...);
+
+  return content.run(formatted);
 }
