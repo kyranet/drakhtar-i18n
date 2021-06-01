@@ -1,6 +1,4 @@
-# name system "latn"
-
-# punctuation marks
+# Punctuation
 DECIMAL=","
 GROUP="."
 LIST=";"
@@ -15,7 +13,7 @@ INFINITE="∞"
 NAN="NaN"
 TIME_SEPARATOR=":"
 
-# digits characters
+# Digits
 ZERO="0"
 ONE="1"
 TWO="2"

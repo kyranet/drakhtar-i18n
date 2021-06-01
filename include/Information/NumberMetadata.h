@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include <array>
 #include <map>
 #include <string>
 
@@ -24,24 +25,15 @@ class NumberMetadata {
   std::string nan_{};
   std::string timeSeparator_{};
 
-  // numeric digits symbols:
-  std::string zero_{};
-  std::string one_{};
-  std::string two_{};
-  std::string three_{};
-  std::string four_{};
-  std::string five_{};
-  std::string six_{};
-  std::string seven_{};
-  std::string eight_{};
-  std::string nine_{};
+  std::array<std::string, 10> numbers_{};
+
+  static bool read(const std::map<std::string, StringContent>& map,
+                   const std::string& key, std::string& string) noexcept;
 
  public:
-  NumberMetadata(std::map<std::string, StringContent> map);
+  NumberMetadata(const std::map<std::string, StringContent>& map);
 
-  // ******************
-  // PUNCTUATION MARKS:
-  // ******************
+  void apply(const std::map<std::string, StringContent>& map) noexcept;
 
   /**
    * Gets the 'decimal' symbol.
@@ -122,57 +114,10 @@ class NumberMetadata {
     return timeSeparator_;
   }
 
-  // ***************
-  // NUMERIC DIGITS:
-  // ***************
-
   /**
-   * Gets the 'zero' symbol.
+   * Gets the character for the given number, between 0 and 9.
    */
-  [[nodiscard]] const std::string& zero() const noexcept { return zero_; }
-
-  /**
-   * Gets the 'one' symbol.
-   */
-  [[nodiscard]] const std::string& one() const noexcept { return one_; }
-
-  /**
-   * Gets the 'two' symbol.
-   */
-  [[nodiscard]] const std::string& two() const noexcept { return two_; }
-
-  /**
-   * Gets the 'three' symbol.
-   */
-  [[nodiscard]] const std::string& three() const noexcept { return three_; }
-
-  /**
-   * Gets the 'four' symbol.
-   */
-  [[nodiscard]] const std::string& four() const noexcept { return four_; }
-
-  /**
-   * Gets the 'five' symbol.
-   */
-  [[nodiscard]] const std::string& five() const noexcept { return five_; }
-
-  /**
-   * Gets the 'six' symbol.
-   */
-  [[nodiscard]] const std::string& six() const noexcept { return six_; }
-
-  /**
-   * Gets the 'seven' symbol.
-   */
-  [[nodiscard]] const std::string& seven() const noexcept { return seven_; }
-
-  /**
-   * Gets the 'eight' symbol.
-   */
-  [[nodiscard]] const std::string& eight() const noexcept { return eight_; }
-
-  /**
-   * Gets the 'nine' symbol.
-   */
-  [[nodiscard]] const std::string& nine() const noexcept { return nine_; }
+  [[nodiscard]] const std::string& at(size_t index) const noexcept {
+    return numbers_[index];
+  }
 };
