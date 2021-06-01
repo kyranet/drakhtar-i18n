@@ -104,3 +104,140 @@ TEST(Locale, load_asset) {
   std::filesystem::remove(meta);
   std::filesystem::remove(path);
 }
+
+TEST(Locale, format_without_variables) {
+  std::filesystem::path path{"languages"};
+  path.append("fr-FR");
+
+  std::filesystem::create_directory(path);
+
+  const auto meta = path / ".meta.txt";
+  std::ofstream fMeta(meta);
+  fMeta << "NAME=\"Français (France)\"\n";
+  fMeta.close();
+
+  const auto misc = path / "misc.txt";
+  std::ofstream fMisc(misc);
+  fMisc << "HELLO=\"Hello!\"\n";
+  fMisc.close();
+
+  LocaleManager manager{};
+  Locale l{manager};
+  l.init("fr-FR");
+  l.load();
+  EXPECT_EQ(l.format("HELLO"), "Hello!");
+
+  std::filesystem::remove(misc);
+  std::filesystem::remove(meta);
+  std::filesystem::remove(path);
+}
+
+TEST(Locale, format_with_one_variable) {
+  std::filesystem::path path{"languages"};
+  path.append("fr-FR");
+
+  std::filesystem::create_directory(path);
+
+  const auto meta = path / ".meta.txt";
+  std::ofstream fMeta(meta);
+  fMeta << "NAME=\"Français (France)\"\n";
+  fMeta.close();
+
+  const auto misc = path / "misc.txt";
+  std::ofstream fMisc(misc);
+  fMisc << "HELLO=\"Hello {0}!\"\n";
+  fMisc.close();
+
+  LocaleManager manager{};
+  Locale l{manager};
+  l.init("fr-FR");
+  l.load();
+  EXPECT_EQ(l.format("HELLO", "Drakhtar"), "Hello Drakhtar!");
+
+  std::filesystem::remove(misc);
+  std::filesystem::remove(meta);
+  std::filesystem::remove(path);
+}
+
+TEST(Locale, format_with_two_variables) {
+  std::filesystem::path path{"languages"};
+  path.append("fr-FR");
+
+  std::filesystem::create_directory(path);
+
+  const auto meta = path / ".meta.txt";
+  std::ofstream fMeta(meta);
+  fMeta << "NAME=\"Français (France)\"\n";
+  fMeta.close();
+
+  const auto misc = path / "misc.txt";
+  std::ofstream fMisc(misc);
+  fMisc << "HELLO=\"Hello {0}! Welcome to {1}.\"\n";
+  fMisc.close();
+
+  LocaleManager manager{};
+  Locale l{manager};
+  l.init("fr-FR");
+  l.load();
+  EXPECT_EQ(l.format("HELLO", "Drakhtar", "Hell"),
+            "Hello Drakhtar! Welcome to Hell.");
+
+  std::filesystem::remove(misc);
+  std::filesystem::remove(meta);
+  std::filesystem::remove(path);
+}
+
+TEST(Locale, format_with_bool) {
+  std::filesystem::path path{"languages"};
+  path.append("fr-FR");
+
+  std::filesystem::create_directory(path);
+
+  const auto meta = path / ".meta.txt";
+  std::ofstream fMeta(meta);
+  fMeta << "NAME=\"Français (France)\"\n";
+  fMeta.close();
+
+  const auto misc = path / "misc.txt";
+  std::ofstream fMisc(misc);
+  fMisc << "HELLO=\"Hello {0b}!\"\n";
+  fMisc.close();
+
+  LocaleManager manager{};
+  Locale l{manager};
+  l.init("fr-FR");
+  l.load();
+  EXPECT_EQ(l.format("HELLO", false), "Hello false!");
+
+  std::filesystem::remove(misc);
+  std::filesystem::remove(meta);
+  std::filesystem::remove(path);
+}
+
+TEST(Locale, format_with_numbers) {
+  std::filesystem::path path{"languages"};
+  path.append("fr-FR");
+
+  std::filesystem::create_directory(path);
+
+  const auto meta = path / ".meta.txt";
+  std::ofstream fMeta(meta);
+  fMeta << "NAME=\"Français (France)\"\n";
+  fMeta.close();
+
+  const auto misc = path / "misc.txt";
+  std::ofstream fMisc(misc);
+  fMisc << "HELLO=\"Let's count: {0i8}, {1u32}, {2f64}.\"\n";
+  fMisc.close();
+
+  LocaleManager manager{};
+  Locale l{manager};
+  l.init("fr-FR");
+  l.load();
+  EXPECT_EQ(l.format("HELLO", static_cast<int8_t>(-1), 0u, 0.0),
+            "Let's count: -1, 0, 0.0.");
+
+  std::filesystem::remove(misc);
+  std::filesystem::remove(meta);
+  std::filesystem::remove(path);
+}

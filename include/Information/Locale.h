@@ -21,17 +21,19 @@ class Locale {
   NumberMetadata* numeric_;
   // TODO: IBool
 
-  [[nodiscard]] std::string display(bool arg);
-  [[nodiscard]] std::string display(int8_t arg);
-  [[nodiscard]] std::string display(int16_t arg);
-  [[nodiscard]] std::string display(int32_t arg);
-  [[nodiscard]] std::string display(int64_t arg);
-  [[nodiscard]] std::string display(uint8_t arg);
-  [[nodiscard]] std::string display(uint16_t arg);
-  [[nodiscard]] std::string display(uint32_t arg);
-  [[nodiscard]] std::string display(uint64_t arg);
-  [[nodiscard]] std::string display(float arg);
-  [[nodiscard]] std::string display(double arg);
+  [[nodiscard]] const std::string& display(const std::string& arg) const;
+  [[nodiscard]] std::string display(const char* arg) const;
+  [[nodiscard]] std::string display(bool arg) const;
+  [[nodiscard]] std::string display(int8_t arg) const;
+  [[nodiscard]] std::string display(int16_t arg) const;
+  [[nodiscard]] std::string display(int32_t arg) const;
+  [[nodiscard]] std::string display(int64_t arg) const;
+  [[nodiscard]] std::string display(uint8_t arg) const;
+  [[nodiscard]] std::string display(uint16_t arg) const;
+  [[nodiscard]] std::string display(uint32_t arg) const;
+  [[nodiscard]] std::string display(uint64_t arg) const;
+  [[nodiscard]] std::string display(float arg) const;
+  [[nodiscard]] std::string display(double arg) const;
 
   void load(const std::filesystem::path& path, const std::string& prefix);
   void loadMetadata(const std::filesystem::path& path);
@@ -87,11 +89,34 @@ class Locale {
    * Gets the amount of loaded assets.
    */
   [[nodiscard]] size_t assetsSize() const noexcept { return assets_.size(); }
-  
+
   [[nodiscard]] const NumberMetadata* numbers() const noexcept {
     return numeric_;
   }
   NumberMetadata* numbers() noexcept { return numeric_; }
 
-  std::string format(const std::string* arg...);
+  inline void nextArgument(std::vector<std::string>&) const noexcept {}
+
+  template <typename T>
+  inline void nextArgument(std::vector<std::string>& formatted,
+                           T value) const noexcept {
+    formatted.push_back(display(value));
+  }
+
+  template <typename T, typename... Args>
+  inline void nextArgument(std::vector<std::string>& formatted, T value,
+                           Args... args) const noexcept {
+    formatted.push_back(display(value));
+    nextArgument(formatted, args...);
+  }
+
+  template <typename... Args>
+  std::string format(const std::string& key, Args... args) {
+    const auto& content = keys_.at(key);
+
+    std::vector<std::string> formatted{};
+    nextArgument(formatted, args...);
+
+    return content.run(formatted);
+  }
 };
