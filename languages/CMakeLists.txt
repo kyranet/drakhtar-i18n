@@ -1,4 +1,6 @@
-set(ASSET_FILES)
+set(ASSET_FILES
+	".numeric/latn.txt")
+
 set(LANGUAGES
 	"en"
 	"en-US"

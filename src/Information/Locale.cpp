@@ -7,6 +7,7 @@
 #include <stack>
 
 #include "Information/LocaleComponents.h"
+#include "Information/NumberMetadata.h"
 #include "LocaleManager.h"
 #include "Parser/FileParser.h"
 #include "Parser/Strings/StringContent.h"
@@ -63,6 +64,7 @@ void Locale::loadMetadata(const std::filesystem::path& path) {
   name_ = map.at("NAME").run({});
 
   // TODO(Pablo): Assign all other properties here
+  numeric_ = new NumberMetadata{map};
 }
 
 bool Locale::loadFallback(const std::string& name) {
