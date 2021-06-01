@@ -3,6 +3,7 @@
 #pragma once
 
 #include "Parser/Tokenizer.h"
+#include "Utils/Util.h"
 
 template <typename T>
 class IParser {
@@ -13,8 +14,7 @@ class IParser {
 
   [[noreturn]] inline void unexpectedCharacter(char c,
                                                const std::string& type) {
-    const auto uc = *reinterpret_cast<uint8_t*>(&c);
-    throw std::runtime_error("Unexpected character '" + std::to_string(uc) +
+    throw std::runtime_error("Unexpected character '" + Util::format(c) +
                              "', " + type + " was expected.");
   }
 

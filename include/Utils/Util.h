@@ -27,6 +27,14 @@ struct Locale {
 };
 
 /**
+ * Gets the string from a raw character.
+ */
+[[nodiscard]] inline std::string format(char c) noexcept {
+  char cStr[2]{c, '\0'};
+  return std::string(cStr);
+}
+
+/**
  * Check whether or not a character is an ASCII line break.
  */
 [[nodiscard]] inline bool isLineBreak(char c) noexcept {

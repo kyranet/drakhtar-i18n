@@ -2,12 +2,35 @@
 
 #pragma once
 
+#include <cassert>
 #include <string>
 #include <tuple>
 #include <variant>
 #include <vector>
 
-using variable_t = std::tuple<size_t, std::vector<std::string>>;
+enum class Type {
+  String,
+  Boolean,
+  Int8,
+  Int16,
+  Int32,
+  Int64,
+  UInt8,
+  UInt16,
+  UInt32,
+  UInt64,
+  Float32,
+  Float64
+};
+
+using variable_modifiers_t = std::vector<std::string>;
+using modifiers_t = std::vector<variable_modifiers_t>;
+
+struct VariableInfo {
+  size_t index;
+  Type type;
+  variable_modifiers_t modifiers;
+};
 
 class StringContent final {
   enum class PartType { Content, Variable };
@@ -18,12 +41,9 @@ class StringContent final {
 
    public:
     PartType type;
-    std::vector<std::string> modifiers;
 
-    explicit ContentPart(variable_t var)
-        : value(std::get<0>(var)),
-          type(PartType::Variable),
-          modifiers(std::get<1>(var)) {}
+    explicit ContentPart(size_t value)
+        : value(value), type(PartType::Variable) {}
     explicit ContentPart(const std::string& content)
         : value(content), type(PartType::Content) {}
 
@@ -52,7 +72,9 @@ class StringContent final {
     }
   };
 
+  std::vector<Type> types_{};
   std::vector<ContentPart> parts_{};
+  modifiers_t modifiers_{};
   bool dynamic_{false};
 
   /**
@@ -83,12 +105,29 @@ class StringContent final {
   /**
    * Adds a new variable part into the content.
    * @param index The index of the variable to read from when running.
+   * @param type The type of the variable to read from when running.
    * @param mods The modifiers to be applied to the variable.
    */
-  inline void add(variable_t var) {
-    add(ContentPart{var});
+  inline void add(size_t index, Type type,
+                  const std::vector<std::string>& mods) {
+    add(ContentPart{index});
+    if (index >= types_.size()) {
+      types_.resize(index + 1);
+      modifiers_.resize(index + 1);
+    }
+    types_[index] = type;
+    modifiers_[index] = mods;
     dynamic_ = true;
   };
+
+  /**
+   * Adds a new variable part into the content.
+   * @param info info which contains both index and type of the variable to read
+   * from when running.
+   */
+  inline void add(const VariableInfo& info) {
+    add(info.index, info.type, info.modifiers);
+  }
 
   /**
    * Processes the string with a set of variables.
@@ -112,4 +151,18 @@ class StringContent final {
    * Checks the size of the stored parts.
    */
   [[nodiscard]] inline size_t size() const noexcept { return parts_.size(); }
+
+  /**
+   * Get the argument types of the content.
+   */
+  [[nodiscard]] inline const std::vector<Type>& types() const noexcept {
+    return types_;
+  }
+
+  /**
+   * Get the argument modifiers of the content.
+   */
+  [[nodiscard]] inline const modifiers_t& modifiers() const noexcept {
+    return modifiers_;
+  }
 };

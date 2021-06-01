@@ -4,6 +4,7 @@
 
 #include <sstream>
 
+#include "Parser/Strings/StringContent.h"
 #include "Parser/Tokenizer.h"
 #include "Utils/Util.h"
 
@@ -133,17 +134,18 @@ std::string StringParser::parseHexadecimal() { return parseHexadecimal(2); }
 
 std::string StringParser::parseUnicode() { return parseHexadecimal(4); }
 
-variable_t StringParser::parseVariable() {
+VariableInfo StringParser::parseVariable() {
   auto& t = tokenizer();
 
   bool defined{false};
   size_t n{0};
-  std::vector<std::string> mods;
+  std::vector<std::string> mods{};
+  Type type = Type::String;
 
   char c;
   while (t.next(c)) {
     if (c == '}') {
-      if (defined) return variable_t{n, mods};
+      if (defined) return {n, type, mods};
 
       throw std::runtime_error("Received empty variable place-holder.");
     }
@@ -155,7 +157,15 @@ variable_t StringParser::parseVariable() {
       continue;
     }
 
+    if (Util::isLetter(c)) {
+      if (!defined) unexpectedCharacter(c, "an index before reading a type");
+      type = parseType(c);
+      continue;
+    }
+
     if (c == ':') {
+      if (!defined)
+        unexpectedCharacter(c, "an index before reading a modifier");
       mods = parseModifiers();
       continue;
     }
@@ -166,12 +176,12 @@ variable_t StringParser::parseVariable() {
   unexpectedEndOfInput();
 }
 
-std::vector<std::string> StringParser::parseModifiers() {
+const std::vector<std::string> StringParser::parseModifiers() {
   auto& t = tokenizer();
   std::vector<std::string> mods = std::vector<std::string>();
   std::stringstream mod;
-  char c;
 
+  char c;
   while (t.next(c)) {
     if (c == '}') {
       mods.push_back(mod.str());
@@ -187,5 +197,98 @@ std::vector<std::string> StringParser::parseModifiers() {
 
     mod << c;
   }
+
   return mods;
+}
+
+Type StringParser::parseType(char c) {
+  auto& t = tokenizer();
+
+  bool defined{false};
+  size_t n{0};
+
+  // TODO(Antonio): Consume integer only if 'i', 'u', or 'f':
+  // TODO(Antonio): Add tests to ensure 'sX' and 'bX' throw.
+  switch (c) {
+    case 's':
+    case 'b':
+      defined = true;
+      break;
+    case 'i':
+    case 'u':
+    case 'f':
+      break;
+    default:
+      unexpectedCharacter(c, "a type");
+  }
+
+  char type = c;
+
+  while (t.next(c)) {
+    if (c == '}' || c == ':') {
+      if (defined) break;
+      throw std::runtime_error("A numeric size was expected after '" +
+                               Util::format(type) + "', but none was given.");
+    }
+
+    if (Util::isNumber(c)) {
+      defined = true;
+      n *= 10;
+      n += Util::getNumber(c);
+      continue;
+    }
+
+    unexpectedCharacter(c, "a size");
+  }
+
+  if (c != '}' && c != ':') unexpectedEndOfInput();
+
+  t.undo();
+
+  switch (type) {
+    case 's':
+      return Type::String;
+    case 'b':
+      return Type::Boolean;
+    case 'i':
+      switch (n) {
+        case 8:
+          return Type::Int8;
+        case 16:
+          return Type::Int16;
+        case 32:
+          return Type::Int32;
+        case 64:
+          return Type::Int64;
+        default:
+          throw std::runtime_error("Signed integer with a size of " +
+                                   std::to_string(n) + " bits not supported.");
+      }
+    case 'u':
+      switch (n) {
+        case 8:
+          return Type::UInt8;
+        case 16:
+          return Type::UInt16;
+        case 32:
+          return Type::UInt32;
+        case 64:
+          return Type::UInt64;
+        default:
+          throw std::runtime_error("Unsigned integer with a size of " +
+                                   std::to_string(n) + " bits not supported.");
+      }
+    case 'f':
+      switch (n) {
+        case 32:
+          return Type::Float32;
+        case 64:
+          return Type::Float64;
+        default:
+          throw std::runtime_error("Floating point number with a size of " +
+                                   std::to_string(n) + " bits not supported.");
+      }
+    default:
+      unexpectedCharacter(type, "a numeric type");
+  }
 }

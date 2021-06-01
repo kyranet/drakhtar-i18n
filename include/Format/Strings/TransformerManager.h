@@ -20,7 +20,7 @@ class TransformerManager {
  public:
   static TransformerManager& getInstance();
 
-  std::string format(std::string string, std::string format) {
+  std::string format(std::string string, std::string format) const {
     const auto search = transformers.find(format);
     if (search != transformers.cend()) return search->second->format(string);
 
