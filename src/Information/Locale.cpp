@@ -236,13 +236,3 @@ std::string Locale::displayNormal(double arg) const {
 
   return ss.str();
 }
-
-template <typename... T>
-std::string Locale::format(const std::string& key, T... args) {
-  const auto& content = keys_.at(key);
-
-  std::vector<std::string> formatted{};
-  nextArgument(formatted, args...);
-
-  return content.run(formatted);
-}
