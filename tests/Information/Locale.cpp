@@ -63,3 +63,31 @@ TEST(Locale, load_with_content) {
   std::filesystem::remove(meta);
   std::filesystem::remove(path);
 }
+
+TEST(Locale, load_asset) {
+  std::filesystem::path path{"languages"};
+  path.append("fr-FR");
+
+  std::filesystem::create_directory(path);
+
+  const auto meta = path / ".meta.txt";
+  std::ofstream fMeta(meta);
+  fMeta << "NAME=\"Français (France)\"\n";
+  fMeta.close();
+
+  const auto img = path / "img.jpg";
+  std::ofstream fImg(img);
+  fImg << "This is an image\"\n";
+  fImg.close();
+
+  LocaleManager manager{};
+  Locale l{manager};
+
+  EXPECT_NO_THROW(l.init("fr-FR"));
+  EXPECT_NO_THROW(l.load());
+  EXPECT_EQ(l.assetsSize(), 1);
+
+  std::filesystem::remove(img);
+  std::filesystem::remove(meta);
+  std::filesystem::remove(path);
+}

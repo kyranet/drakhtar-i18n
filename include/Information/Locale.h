@@ -16,6 +16,7 @@ class Locale {
   std::string name_{};
   std::string locale_{};
   std::map<std::string, StringContent> keys_{};
+  std::map<std::string, std::string> assets_{};
   LocaleManager& manager_;
   INumber* numbers_{};
   // TODO: IBool
@@ -70,9 +71,22 @@ class Locale {
   }
 
   /**
+   * Gets the asset route given a key.
+   */
+  [[nodiscard]] const std::string& getAsset(
+      const std::string& key) const noexcept {
+    return assets_.at(key);
+  }
+
+  /**
    * Gets the amount of loaded keys.
    */
   [[nodiscard]] size_t size() const noexcept { return keys_.size(); }
+
+  /**
+   * Gets the amount of loaded assets.
+   */
+  [[nodiscard]] size_t assetsSize() const noexcept { return assets_.size(); }
 
   [[nodiscard]] const INumber* numbers() const noexcept { return numbers_; }
   INumber* numbers() noexcept { return numbers_; }
