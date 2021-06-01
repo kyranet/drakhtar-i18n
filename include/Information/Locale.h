@@ -89,11 +89,13 @@ class Locale {
    * Gets the amount of loaded assets.
    */
   [[nodiscard]] size_t assetsSize() const noexcept { return assets_.size(); }
-  
+
   [[nodiscard]] const NumberMetadata* numbers() const noexcept {
     return numeric_;
   }
   NumberMetadata* numbers() noexcept { return numeric_; }
+
+  inline void nextArgument(std::vector<std::string>&) const noexcept {}
 
   template <typename T>
   inline void nextArgument(std::vector<std::string>& formatted,
@@ -117,7 +119,4 @@ class Locale {
 
     return content.run(formatted);
   }
-
-  [[nodiscard]] const INumber* numbers() const noexcept { return numbers_; }
-  INumber* numbers() noexcept { return numbers_; }
 };
