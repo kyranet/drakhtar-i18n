@@ -50,10 +50,7 @@ void Locale::load(const std::filesystem::path& path,
     }
 
     // If the file is anything else, save it as an asset:
-    std::filesystem::path root{"languages"};
-    root.append(locale());
-    std::string key = std::filesystem::relative(path, root).string();
-    assets_.insert({key, file.path().string()});
+    assets_.insert({prefix + name, file.path().string()});
   }
 }
 

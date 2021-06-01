@@ -79,28 +79,28 @@ TEST(Locale, load_asset) {
   std::ofstream fImg(img);
   fImg << "This is an image\"\n";
   fImg.close();
-  /*
+
   const auto images = path / "images";
   std::filesystem::create_directory(images);
 
   const auto img2 = images / "img2.jpg";
   std::ofstream fImg2(img2);
   fImg2 << "This is an image\"\n";
-  fImg2.close();*/
+  fImg2.close();
 
   LocaleManager manager{};
   Locale l{manager};
 
   EXPECT_NO_THROW(l.init("de-DE"));
   EXPECT_NO_THROW(l.load());
-  EXPECT_EQ(l.assetsSize(), 1);
-  EXPECT_EQ(l.getAsset("img.jpg"), "languages/de-DE/img.jpg");
-  // EXPECT_EQ(l.getAsset("images/img2.jpg"),
-  // "languages/fr-FR/images/img2.jpg");
+  EXPECT_EQ(l.assetsSize(), 2);
+  EXPECT_EQ(l.getAsset("img.jpg"), "languages\\de-DE\\img.jpg");
+  EXPECT_EQ(l.getAsset("images/img2.jpg"),
+            "languages\\de-DE\\images\\img2.jpg");
 
+  std::filesystem::remove(img2);
+  std::filesystem::remove(images);
   std::filesystem::remove(img);
-  // std::filesystem::remove(img2);
   std::filesystem::remove(meta);
-  // std::filesystem::remove(images);
   std::filesystem::remove(path);
 }
