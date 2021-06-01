@@ -66,28 +66,41 @@ TEST(Locale, load_with_content) {
 
 TEST(Locale, load_asset) {
   std::filesystem::path path{"languages"};
-  path.append("fr-FR");
+  path.append("de-DE");
 
   std::filesystem::create_directory(path);
 
   const auto meta = path / ".meta.txt";
   std::ofstream fMeta(meta);
-  fMeta << "NAME=\"Français (France)\"\n";
+  fMeta << "NAME=\"Deutsche (Deutschland)\"\n";
   fMeta.close();
 
   const auto img = path / "img.jpg";
   std::ofstream fImg(img);
   fImg << "This is an image\"\n";
   fImg.close();
+  /*
+  const auto images = path / "images";
+  std::filesystem::create_directory(images);
+
+  const auto img2 = images / "img2.jpg";
+  std::ofstream fImg2(img2);
+  fImg2 << "This is an image\"\n";
+  fImg2.close();*/
 
   LocaleManager manager{};
   Locale l{manager};
 
-  EXPECT_NO_THROW(l.init("fr-FR"));
+  EXPECT_NO_THROW(l.init("de-DE"));
   EXPECT_NO_THROW(l.load());
   EXPECT_EQ(l.assetsSize(), 1);
+  EXPECT_EQ(l.getAsset("img.jpg"), "languages/de-DE/img.jpg");
+  // EXPECT_EQ(l.getAsset("images/img2.jpg"),
+  // "languages/fr-FR/images/img2.jpg");
 
   std::filesystem::remove(img);
+  // std::filesystem::remove(img2);
   std::filesystem::remove(meta);
+  // std::filesystem::remove(images);
   std::filesystem::remove(path);
 }
