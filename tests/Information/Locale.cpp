@@ -2,6 +2,7 @@
 
 #include <gtest/gtest.h>
 
+#include <cmath>
 #include <fstream>
 
 #include "LocaleManager.h"
@@ -43,6 +44,7 @@ TEST(Locale, load_with_content) {
   const auto meta = path / ".meta.txt";
   std::ofstream fMeta(meta);
   fMeta << "NAME=\"Français (France)\"\n";
+  fMeta << "NUMERIC_SYSTEM=\"latn\"\n";
   fMeta.close();
 
   const auto misc = path / "misc.txt";
@@ -73,6 +75,7 @@ TEST(Locale, load_asset) {
   const auto meta = path / ".meta.txt";
   std::ofstream fMeta(meta);
   fMeta << "NAME=\"Deutsche (Deutschland)\"\n";
+  fMeta << "NUMERIC_SYSTEM=\"latn\"\n";
   fMeta.close();
 
   const auto img = path / "img.jpg";
@@ -114,6 +117,7 @@ TEST(Locale, format_without_variables) {
   const auto meta = path / ".meta.txt";
   std::ofstream fMeta(meta);
   fMeta << "NAME=\"Français (France)\"\n";
+  fMeta << "NUMERIC_SYSTEM=\"latn\"\n";
   fMeta.close();
 
   const auto misc = path / "misc.txt";
@@ -141,6 +145,7 @@ TEST(Locale, format_with_one_variable) {
   const auto meta = path / ".meta.txt";
   std::ofstream fMeta(meta);
   fMeta << "NAME=\"Français (France)\"\n";
+  fMeta << "NUMERIC_SYSTEM=\"latn\"\n";
   fMeta.close();
 
   const auto misc = path / "misc.txt";
@@ -168,6 +173,7 @@ TEST(Locale, format_with_two_variables) {
   const auto meta = path / ".meta.txt";
   std::ofstream fMeta(meta);
   fMeta << "NAME=\"Français (France)\"\n";
+  fMeta << "NUMERIC_SYSTEM=\"latn\"\n";
   fMeta.close();
 
   const auto misc = path / "misc.txt";
@@ -196,6 +202,7 @@ TEST(Locale, format_with_bool) {
   const auto meta = path / ".meta.txt";
   std::ofstream fMeta(meta);
   fMeta << "NAME=\"Français (France)\"\n";
+  fMeta << "NUMERIC_SYSTEM=\"latn\"\n";
   fMeta.close();
 
   const auto misc = path / "misc.txt";
@@ -223,21 +230,72 @@ TEST(Locale, format_with_numbers) {
   const auto meta = path / ".meta.txt";
   std::ofstream fMeta(meta);
   fMeta << "NAME=\"Français (France)\"\n";
+  fMeta << "NUMERIC_SYSTEM=\"latn\"\n";
   fMeta.close();
 
   const auto misc = path / "misc.txt";
   std::ofstream fMisc(misc);
-  fMisc << "HELLO=\"Let's count: {0i8}, {1u32}, {2f64}.\"\n";
+  fMisc << "HELLO=\"Let's count: {0i8} - {1u32} - {2f64}.\"\n";
   fMisc.close();
 
   LocaleManager manager{};
   Locale l{manager};
   l.init("fr-FR");
   l.load();
-  EXPECT_EQ(l.format("HELLO", static_cast<int8_t>(-1), 0u, 0.0),
-            "Let's count: -1, 0, 0.0.");
+  EXPECT_EQ(l.format("HELLO", static_cast<int8_t>(-1), 0u, 0.5),
+            "Let's count: -1 - 0 - 0,5.");
 
   std::filesystem::remove(misc);
   std::filesystem::remove(meta);
   std::filesystem::remove(path);
+}
+
+TEST(Locale, format_with_floats) {
+  std::filesystem::path path{"languages"};
+  path.append("en");
+
+  const auto misc = path / "misc.txt";
+  std::ofstream fMisc(misc);
+  fMisc << "F32=\"{0f32} {1f32}\"\n";
+  fMisc << "F64=\"{0f32} {1f32}\"\n";
+  fMisc.close();
+
+  LocaleManager manager{};
+  Locale l{manager};
+  EXPECT_NO_THROW(l.init("en"));
+  EXPECT_NO_THROW(l.load());
+
+  // NaN
+  constexpr auto NaN = NAN;
+  constexpr auto DNaN = static_cast<double>(NaN);
+  EXPECT_EQ(l.format("F32", NaN, -NaN), "NaN NaN");
+  EXPECT_EQ(l.format("F64", DNaN, -DNaN), "NaN NaN");
+
+  // Zero
+  EXPECT_EQ(l.format("F32", 0.f, -0.f), "0 -0");
+  EXPECT_EQ(l.format("F64", 0.0, -0.0), "0 -0");
+
+  // Infinite
+  constexpr auto Inf = INFINITY;
+  constexpr auto DInf = static_cast<double>(Inf);
+  EXPECT_EQ(l.format("F32", Inf, -Inf), "+∞ -∞");
+  EXPECT_EQ(l.format("F64", DInf, -DInf), "+∞ -∞");
+
+  // Normal
+  EXPECT_EQ(l.format("F32", 5.f, 0.5f), "5 0,5");
+  EXPECT_EQ(l.format("F64", 5.0, 0.5), "5 0,5");
+
+  // - Positive Exponent
+  EXPECT_EQ(l.format("F32", 23456789123456789.f, -23456789123456.789f),
+            "2,345678e+16 -2,345678e+13");
+  EXPECT_EQ(l.format("F64", 23456789123456789.0, -23456789123456.789),
+            "2,345678e+16 -2,345678e+13");
+
+  // - Negative Exponent
+  EXPECT_EQ(l.format("F32", 0.23456789123456789f, -0.000223456789123456f),
+            "0,234567 -0,000223");
+  EXPECT_EQ(l.format("F64", 0.000000000000234567, -0.000000022345678912345),
+            "0,234567e-12 -0,223456e-7");
+
+  std::filesystem::remove(misc);
 }

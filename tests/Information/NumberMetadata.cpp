@@ -19,7 +19,7 @@ TEST(NumberMetadata, latn) {
   EXPECT_EQ(meta.plus(), "+");
   EXPECT_EQ(meta.minus(), "-");
   EXPECT_EQ(meta.approximately(), "↑↑↑");
-  EXPECT_EQ(meta.exponential(), "E");
+  EXPECT_EQ(meta.exponential(), "e");
   EXPECT_EQ(meta.superscriptingExponent(), "×");
   EXPECT_EQ(meta.perMille(), "‰");
   EXPECT_EQ(meta.infinity(), "∞");
