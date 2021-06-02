@@ -4,6 +4,7 @@
 
 #include <Information/NumberMetadata.h>
 
+#include <cstring>
 #include <limits>
 #include <string>
 
