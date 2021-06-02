@@ -62,7 +62,6 @@ void Locale::loadMetadata(const std::filesystem::path& path) {
   const auto map = fp.run();
   name_ = map.at("NAME").run({});
 
-  // TODO(Pablo): Assign all other properties here
   numeric_ = new NumberMetadata{map};
 }
 
@@ -186,33 +185,53 @@ std::string Locale::display(double arg) const {
 
   // If the classification is Normal, print the double as a normal number:
   if (c == FP_NORMAL) {
-    return negative ? n.minus() + displayNormal(-arg) : displayNormal(arg);
+    return negative ? n.minus() + displayMaybeExponent(-arg)
+                    : displayMaybeExponent(arg);
   }
 
-  // TODO: Implement this this below.
-  // If the classification is Denormal, extract the exponent, normalise the
-  // number, and then print as a normal number:
+  // If the classification is Denormal, extract the exponent,
+  // normalise the number, and then print as a normal number:
+  return negative ? n.minus() + displayMaybeExponent(-arg)
+                  : displayMaybeExponent(arg);
+}
 
-  return "0.0";
+std::string Locale::displayMaybeExponent(double arg) const {
+  const auto exponent = std::log10(arg);
+  if (std::abs(exponent) - 1 >= displayDigits())
+    return displayExponent(arg, exponent);
+  return displayNormal(arg);
+}
+
+std::string Locale::displayExponent(double arg, int32_t exponent) const {
+  const auto& n = *numbers();
+
+  const auto normalized = arg * std::pow(10.0, static_cast<double>(-exponent));
+  const auto number = displayNormal(normalized);
+  const auto exp =
+      exponent < 0 ? display(exponent) : n.plus() + display(exponent);
+
+  return number + n.exponential() + exp;
 }
 
 std::string Locale::displayNormal(double arg) const {
   const auto& n = *numbers();
-  double whole;
-  auto decimal = std::modf(arg, &whole);
+  double integral;
+  auto decimal = std::modf(arg, &integral);
 
-  const auto w = DigitBuffer<uint64_t>::from(n, static_cast<uint64_t>(whole));
+  const auto w =
+      DigitBuffer<uint64_t>::from(n, static_cast<uint64_t>(integral));
   if (decimal == 0.0) return w;
 
   std::stringstream ss{};
   ss << w;
   ss << n.decimal();
 
+  uint32_t added{0};
   double digit;
-  while (decimal != 0.0) {
+  do {
     decimal = std::modf(decimal * 10.0, &digit);
-    ss << n.at(static_cast<uint64_t>(digit));
-  }
+    ss << n.at(static_cast<size_t>(digit));
+  } while (decimal != 0.0 && ++added < displayDigits());
 
   return ss.str();
 }

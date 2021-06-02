@@ -15,6 +15,7 @@ struct LocaleComponents;
 class Locale {
   std::string name_{};
   std::string locale_{};
+  uint32_t displayDigits_{6};
   std::map<std::string, StringContent> keys_{};
   std::map<std::string, std::string> assets_{};
   LocaleManager& manager_;
@@ -34,6 +35,8 @@ class Locale {
   [[nodiscard]] std::string display(uint64_t arg) const;
   [[nodiscard]] std::string display(float arg) const;
   [[nodiscard]] std::string display(double arg) const;
+  [[nodiscard]] std::string displayMaybeExponent(double arg) const;
+  [[nodiscard]] std::string displayExponent(double arg, int32_t exponent) const;
   [[nodiscard]] std::string displayNormal(double arg) const;
 
   void load(const std::filesystem::path& path, const std::string& prefix);
@@ -45,8 +48,8 @@ class Locale {
   Locale(LocaleManager& manager) : manager_(manager) {}
 
   /**
-   * Initializes the locale's metadata from the `.meta.txt` file located in the
-   * locale's dedicated directory.
+   * Initializes the locale's metadata from the `.meta.txt` file located in
+   * the locale's dedicated directory.
    */
   void init(const std::string& locale);
 
@@ -64,6 +67,18 @@ class Locale {
    * Gets the ISO 631 code.
    */
   [[nodiscard]] const std::string& locale() const noexcept { return locale_; }
+
+  /**
+   * Gets the maximum amount of digits allowed in both the integral and decimal
+   * parts.
+   */
+  uint32_t displayDigits() const noexcept { return displayDigits_; }
+
+  /**
+   * Sets the maximum amount of digits allowed in both the integral and decimal
+   * parts.
+   */
+  uint32_t& displayDigits() noexcept { return displayDigits_; }
 
   /**
    * Gets the StringContent given a key.
