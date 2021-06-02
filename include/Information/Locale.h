@@ -34,6 +34,7 @@ class Locale {
   [[nodiscard]] std::string display(uint64_t arg) const;
   [[nodiscard]] std::string display(float arg) const;
   [[nodiscard]] std::string display(double arg) const;
+  [[nodiscard]] std::string displayNormal(double arg) const;
 
   void load(const std::filesystem::path& path, const std::string& prefix);
   void loadMetadata(const std::filesystem::path& path);

@@ -43,6 +43,7 @@ TEST(Locale, load_with_content) {
   const auto meta = path / ".meta.txt";
   std::ofstream fMeta(meta);
   fMeta << "NAME=\"Français (France)\"\n";
+  fMeta << "NUMERIC_SYSTEM=\"latn\"\n";
   fMeta.close();
 
   const auto misc = path / "misc.txt";
@@ -73,6 +74,7 @@ TEST(Locale, load_asset) {
   const auto meta = path / ".meta.txt";
   std::ofstream fMeta(meta);
   fMeta << "NAME=\"Deutsche (Deutschland)\"\n";
+  fMeta << "NUMERIC_SYSTEM=\"latn\"\n";
   fMeta.close();
 
   const auto img = path / "img.jpg";
@@ -114,6 +116,7 @@ TEST(Locale, format_without_variables) {
   const auto meta = path / ".meta.txt";
   std::ofstream fMeta(meta);
   fMeta << "NAME=\"Français (France)\"\n";
+  fMeta << "NUMERIC_SYSTEM=\"latn\"\n";
   fMeta.close();
 
   const auto misc = path / "misc.txt";
@@ -141,6 +144,7 @@ TEST(Locale, format_with_one_variable) {
   const auto meta = path / ".meta.txt";
   std::ofstream fMeta(meta);
   fMeta << "NAME=\"Français (France)\"\n";
+  fMeta << "NUMERIC_SYSTEM=\"latn\"\n";
   fMeta.close();
 
   const auto misc = path / "misc.txt";
@@ -168,6 +172,7 @@ TEST(Locale, format_with_two_variables) {
   const auto meta = path / ".meta.txt";
   std::ofstream fMeta(meta);
   fMeta << "NAME=\"Français (France)\"\n";
+  fMeta << "NUMERIC_SYSTEM=\"latn\"\n";
   fMeta.close();
 
   const auto misc = path / "misc.txt";
@@ -196,6 +201,7 @@ TEST(Locale, format_with_bool) {
   const auto meta = path / ".meta.txt";
   std::ofstream fMeta(meta);
   fMeta << "NAME=\"Français (France)\"\n";
+  fMeta << "NUMERIC_SYSTEM=\"latn\"\n";
   fMeta.close();
 
   const auto misc = path / "misc.txt";
@@ -223,19 +229,20 @@ TEST(Locale, format_with_numbers) {
   const auto meta = path / ".meta.txt";
   std::ofstream fMeta(meta);
   fMeta << "NAME=\"Français (France)\"\n";
+  fMeta << "NUMERIC_SYSTEM=\"latn\"\n";
   fMeta.close();
 
   const auto misc = path / "misc.txt";
   std::ofstream fMisc(misc);
-  fMisc << "HELLO=\"Let's count: {0i8}, {1u32}, {2f64}.\"\n";
+  fMisc << "HELLO=\"Let's count: {0i8} - {1u32} - {2f64}.\"\n";
   fMisc.close();
 
   LocaleManager manager{};
   Locale l{manager};
   l.init("fr-FR");
   l.load();
-  EXPECT_EQ(l.format("HELLO", static_cast<int8_t>(-1), 0u, 0.0),
-            "Let's count: -1, 0, 0.0.");
+  EXPECT_EQ(l.format("HELLO", static_cast<int8_t>(-1), 0u, 0.5),
+            "Let's count: -1 - 0 - 0,5.");
 
   std::filesystem::remove(misc);
   std::filesystem::remove(meta);
