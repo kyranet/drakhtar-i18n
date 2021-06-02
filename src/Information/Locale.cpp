@@ -196,8 +196,8 @@ std::string Locale::display(double arg) const {
 }
 
 std::string Locale::displayMaybeExponent(double arg) const {
-  const auto exponent = std::log10(arg);
-  if (std::abs(exponent) - 1 >= displayDigits())
+  const auto exponent = static_cast<int32_t>(std::log10(arg));
+  if (std::abs(exponent) >= static_cast<int32_t>(displayDigits()))
     return displayExponent(arg, exponent);
   return displayNormal(arg);
 }
