@@ -114,7 +114,6 @@ std::string Locale::display(bool arg) const {
   return arg ? "true" : "false";
 }
 
-
 std::string Locale::display(int8_t arg) const {
   return arg < 0 ? numbers()->minus() + display(static_cast<uint8_t>(-arg))
                  : display(static_cast<uint8_t>(arg));
