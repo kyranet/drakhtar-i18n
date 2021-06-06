@@ -42,7 +42,8 @@ void Locale::load(const std::filesystem::path& path,
 
     // If the file is .txt file, read it and store its key/value pairs:
     if (file.path().extension().string() == ".txt") {
-      std::ifstream s{file.path()};
+      std::ifstream s;
+      s.open(file.path(), std::ios_base::binary | std::ios_base::in);
       FileParser fp{s};
       for (const auto& pair : fp.run()) {
         const auto key = prefix + pair.first;
@@ -57,7 +58,8 @@ void Locale::load(const std::filesystem::path& path,
 }
 
 void Locale::loadMetadata(const std::filesystem::path& path) {
-  std::ifstream s{path / ".meta.txt"};
+  std::ifstream s;
+  s.open(path / ".meta.txt", std::ios_base::binary | std::ios_base::in);
   FileParser fp{s};
   const auto map = fp.run();
   name_ = map.at("NAME").run({});

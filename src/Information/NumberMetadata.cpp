@@ -17,7 +17,8 @@ NumberMetadata::NumberMetadata(
 
     assert(std::filesystem::exists(path));
 
-    std::ifstream s{path};
+    std::ifstream s;
+    s.open(path, std::ios_base::binary | std::ios_base::in);
     apply(FileParser(s).run());
   }
 
