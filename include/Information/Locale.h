@@ -127,7 +127,7 @@ class Locale {
   }
 
   template <typename... Args>
-  std::string format(const std::string& key, Args... args) {
+  std::string format(const std::string& key, Args... args) const {
     const auto& content = keys_.at(key);
 
     std::vector<std::string> formatted{};
